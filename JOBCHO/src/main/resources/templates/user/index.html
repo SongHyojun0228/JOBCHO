@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{includes/layout}" lang="ko">
+
+<head>
+	<title layout:title="에인화면">에인화면</title>
+	<link rel="stylesheet" th:href="@{/css/user/index.css}" />
+</head>
+
+<body>
+	<div class="main" layout:fragment="content">
+		<div class="profile_container">
+			<h3>프로필</h3>
+			<div class="profile">
+				<div class="right_items">
+					<div th:if="${user.isAdmin != 1}">
+						<img th:src="@{/images/profileImg/default_profile.png}" alt="user_profile_img" />
+					</div>
+					<div th:if="${user.isAdmin != 0}">
+						<img th:src="@{/images/icons/admin2.png}" alt="admin_profile_img" />
+					</div>
+					<div class="profile_info">
+						<p class="profile_info_name" th:text="${user.userName}"></p>
+						<p class="profile_info_email" th:text="${user.userEmail}"></p>
+					</div>
+				</div>
+				<div class="left_items">
+					<img th:src="@{/images/settings.png}" alt="">
+					<a th:href="@{/user/setting}">계정설정</a>
+				</div>
+			</div>
+		</div>
+
+		<div th:if="${user.isAdmin != 1}" class="team_list_container">
+			<h3>팀 리스트</h3>
+			<div class="team_list">
+				<div th:each="workspace : ${workspaces}">
+					<div class="team_list_item">
+						<div class="team">
+							<div class="right_items">
+								<img th:src="@{/images/profileImg/default_team.png}" alt="profile_img" />
+								<div class="team_info">
+									<p class="team_info_team_name" th:text="${workspace.workspaceName}"></p>
+									<a class="team_info_team_domain" th:text="${workspace.workspaceDomain}"
+										th:href="${workspace.workspaceDomain}"></a>
+									<p class="team_info_team_owner"
+										th:text="${workspace.owner.userName} + '(' + ${workspace.owner.userEmail} + ')'">
+									</p>
+								</div>
+							</div>
+							<div class="team_btn">
+								<a href="">팀 관리</a>
+								<a th:href="@{/workspace}">팀으로 가기</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="team_creat_btn">
+				<a th:href="@{/workspace/create}">+팀 생성하기</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

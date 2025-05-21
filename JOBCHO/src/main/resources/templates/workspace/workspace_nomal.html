@@ -1,0 +1,130 @@
+<html layout:decorate="~{workspace/layout_workspace}">
+<div layout:fragment="content" class="container my-3">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title th:text="'Welcome | ' + ${workspaceId}">Welcome</title>
+		<link rel="stylesheet" th:href="@{/css/includes/shared.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/workspace_nomal.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/uploadnotification.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/task.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/bookmark.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/createtask.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/detailtask.css}" />
+	</head>
+
+	<body>
+		<header>
+			<div class="jobcho_logo">
+				<img th:src="@{/images/Jobcho_logo.png}" alt="Jobcho_logo" />
+				<p>Jabcho</p>
+			</div>
+			<div class="header_icon_info">
+				<a href=""><img th:src="@{/images/icons/alarm-bell.png}" alt="i_alarm"></a>
+				<a href=""><img th:src="@{/images/icons/organigram.png}" alt="i_organization"></img></a>
+				<a href=""><img th:src="@{/images/icons/search (1).png}" alt="i_alarm"></img></a>
+				<a href="" id="menu_link"><img th:src="@{/images/icons/menu.png}" alt="i_menu" id="menu_icon"></img></a>
+				<div class="popup2" id="popup2">
+					<div class="menu_icon_plus">
+						<a href="" id="task-link">할 일</a>
+						<a href="" id="vote-link">투표</a>
+						<a href="" id="bookmark-link">즐겨찾기</a>
+					</div>
+				</div>
+				<a href=""><img th:src="@{/images/icons/menu (1).png}" alt="i_alarm"></img></a>
+			</div>
+		</header>
+		<main>
+			<div class="main">
+				<div class="side_bar">
+					<div class="workroom">
+						<div class="search_chat_line">
+							<div class="icon_box">
+								<img th:src="@{/images/icons/search_black.png}" alt="대화방 검색 아이콘">
+								<p>대화방 검색</p>
+							</div>
+							<div class="icon_box">
+								<img th:src="@{/images/icons/show_menu.png}" alt="메뉴 숨기기">
+							</div>
+						</div>
+						<div class="search_chat_line">
+							<div class="icon_box">
+								<img th:src="@{/images/icons/arrow-down.png}" alt="숨기기,보이기 화살표">
+								<p>채팅방</p>
+							</div>
+							<div class="icon_box_2">
+								<img th:src="@{/images/icons/sort_ascending.png}" alt="정렬메뉴">
+							</div>
+							<div class="icon_box_2">
+								<img th:src="@{/images/icons/cross-mark.png}" alt="새로 만들기 버튼" id="create_folder_btn">
+							</div>
+						</div>
+						<div th:each="folder : ${folders}" class="folder">
+							<div class="icon_box">
+								<img th:src="@{/images/icons/arrow-down.png}" alt="숨기기,보이기 화살표">
+								<a href=".." th:text="${folder.folderName}">Default folder</a>
+							</div>
+							<div class="folder_in">
+								<div th:each="chatroom : ${folder.chatrooms}" class="icon_box_chat">
+									<img th:src="@{/images/icons/empty_star.png}" alt="즐겨찾기_빔">
+									<a th:href="@{/workspace/{workspaceId}/{chatroomId}(workspaceId=${folder.workspaceId}, chatroomId=${chatroom.chatroomId})}"
+										th:text="${chatroom.chatroomName}">
+										채팅방 이름</a>
+								</div>
+							</div>
+						</div>
+						<div class="folder" id="create_folder">
+							<div class="icon_box">
+								<form th:action="@{/workspace/{workspaceId}/foldercreate (workspaceId=${workspaceId})}"
+									method="post">
+									<input type="text" id="create_folder_input" name="folder_name">
+								</form>
+							</div>
+						</div>
+						<div class="line_side_bar"></div>
+						<div class="non_folder">
+							<div class="icon_box_chat">
+								<img th:src="@{/images/icons/empty_star.png}" alt="즐겨찾기_빔">
+								<img th:src="@{/images/Jobcho_logo.png}" alt="잡초 로고 small">
+								<a href="..">The Jobcho (나와의 대화)</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="chat">
+					<div th:if="${chatrooms != null}">
+						<div class="chat_header">
+							<div class="chat_header_title">
+								<img th:src="@{/images/icons/empty_star.png}" alt="즐겨찾기">
+								<p th:text="${chatrooms.chatroomName}">쳇 제목</p>
+							</div>
+							<div class="chat_header_emoticon">
+								<img th:src="@{/images/icons/alarm-bell.png}" alt="알람">
+								<img th:src="@{/images/icons/currunt_users.png}" alt="현재 유저 이미지">
+								<img th:src="@{/images/icons/add-user.png}" alt="유저 추가 이미지">
+								<img th:src="@{/images/icons/more-options.png}" alt="더보기 이미지" id="plus_icon">
+								<div class="popup" id="popup">
+									<div>
+										<a href="" id="notice-link">공지등록</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="chat_main">
+						<div class="chat_box">
+							<img th:src="@{/images/icons/cat.png}" alt="기본 시작 화면">
+							<p>오늘은 어디서 시작해볼까요?</p>
+							<p>자유로운 1:1 또는 그룹 대화는 '채팅'</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</main>
+
+
+</div>
+
+</html>

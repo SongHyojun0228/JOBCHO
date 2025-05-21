@@ -1,0 +1,49 @@
+.organization_container {
+	width: 18rem;
+	background-color: white;
+	padding: 1rem;
+}
+
+input {
+	width: 16rem;
+	border: 1px solid rgb(125, 125, 125);
+	padding: 0.7rem;
+	margin-bottom: 2rem;
+}
+
+p {
+	color: rgb(169, 169, 169);
+}
+
+.team_member_text {
+	font-weight: 400;
+	margin-bottom: 1.5em;
+}
+
+.member_list_item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.member_list_item:last-child {
+	margin-bottom: 0;
+}
+
+.member_list_item div {
+	width: 3rem;
+	height: 3rem;
+}
+
+
+.profile_img {
+	width: 3rem;
+	height: 3rem;
+	border-radius: 30%;
+}
+
+.member_name {
+	margin-left: 0.5rem;
+	color: rgb(125, 125, 125);
+	color: black;
+}

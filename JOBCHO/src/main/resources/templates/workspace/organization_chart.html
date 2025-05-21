@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{includes/layout}" lang="ko">
+
+<head>
+	<title layout:title="조직도">조직도</title>
+	<link rel="stylesheet" th:href="@{/css/workspace/organization_chart.css}" />
+</head>
+
+<body>
+	<div class="main" layout:fragment="content">
+		<div class="organization_container">
+			<input type="text" placeholder="참여 멤버">
+			<p class="team_member_text">팀 멤버</p>
+
+			<div class="member_list_container">
+				<div class="member_list_item" th:each="member:${members}">
+					<div th:if="${member.userImg == null} and ${member.isAdmin != 1}">
+						<img th:src="@{/images/profileImg/default_profile.png}" class="profile_img"
+							alt="default_profile_img" />
+					</div>
+					<div th:if="${member.userImg != null} and ${member.isAdmin != 1}">
+						<img th:src="@{'/images/profileImg/' + ${member.userImg}}" class="profile_img"
+							alt="profile_img" />
+					</div>
+					<p class="member_name" th:text="${member.userName}"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
