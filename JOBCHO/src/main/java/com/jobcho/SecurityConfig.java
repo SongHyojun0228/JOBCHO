@@ -18,8 +18,10 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
-	    .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-	            .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+	    .authorizeHttpRequests((authorize) -> authorize
+	            .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+	            .requestMatchers("/user/login", "/user/signup").permitAll()
+	            .anyRequest().authenticated())
 	    .formLogin((formLogin) -> formLogin
 	            .usernameParameter("user_email")
 	            .passwordParameter("user_password") 
@@ -28,7 +30,12 @@ public class SecurityConfig {
 	    .logout((logout) -> logout
 	            .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
 	            .logoutSuccessUrl("/")
-	            .invalidateHttpSession(true));
+	            .invalidateHttpSession(true))
+	    .rememberMe((rememberMe) -> rememberMe
+                .key("my-remember-me-key") 
+                .rememberMeParameter("remember-me") 
+                .tokenValiditySeconds(60 * 60 * 24 * 1)
+        );
 	    
 	    return http.build();
 	}

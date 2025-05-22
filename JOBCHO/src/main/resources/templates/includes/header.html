@@ -1,9 +1,11 @@
 <th:block th:fragment="commonHeader">
 	<header>
-		<div class="jobcho_logo">
-			<img th:src="@{/images/Jobcho_logo.png}" alt="Jobcho_logo">
-			<p>Jobcho</p>
-		</div>
+		<a th:href="@{/index}">
+			<div class="jobcho_logo">
+				<img th:src="@{/images/Jobcho_logo.png}" alt="Jobcho_logo">
+				<p>Jobcho</p>
+			</div>
+		</a>
 
 		<div sec:authorize="isAuthenticated()" class="isLogin">
 			<div class="login_profile">

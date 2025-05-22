@@ -20,15 +20,18 @@
 			<div class="profile_img personal_info_items">
 				<div class="info_texts">
 					<p class="personal_info_items_title">프로필 사진</p>
-					<form class="profile_img_form" th:action="@{/user/userimg/change}" method="post" enctype="multipart/form-data">
+					<form class="profile_img_form" th:action="@{/user/upload/profile}" method="post"
+						enctype="multipart/form-data">
 						<div th:if="${user.userImg == null} and ${user.isAdmin != 1}">
 							<img th:src="@{/images/profileImg/default_profile.png}" class="origin_profile_img"
 								alt="default_profile_img" />
 							<img class="preview" />
 						</div>
 						<div th:if="${user.userImg != null} and ${user.isAdmin != 1}">
-							<img th:src="@{'/images/profileImg/' + ${user.userImg}}" class="origin_profile_img"
-								alt="profile_img" />
+							<!-- <img th:src="@{'/images/profileImg/' + ${user.userImg}}" class="origin_profile_img"
+								alt="profile_img" /> -->
+							<img th:src="@{/uploads/profileImg/{img}(img=${user.userImg})}" class="origin_profile_img"
+								alt="profile_img">
 							<img class="preview" />
 						</div>
 						<div class="profile_label_input_btn_flex">

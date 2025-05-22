@@ -4,11 +4,21 @@
 	padding: 1rem;
 }
 
+h2 {
+	font-size: 1.2rem;
+	margin-bottom: 1rem;
+}
+
+h2 span {
+	color: rgb(169, 169, 169);
+	font-size: 0.9rem;
+}
+
 input {
 	width: 16rem;
 	border: 1px solid rgb(125, 125, 125);
 	padding: 0.7rem;
-	margin-bottom: 2rem;
+	margin-bottom: 3rem;
 }
 
 p {

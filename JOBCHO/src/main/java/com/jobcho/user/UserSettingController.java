@@ -1,8 +1,10 @@
 package com.jobcho.user;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @RequiredArgsConstructor
 @Controller
@@ -37,7 +40,40 @@ public class UserSettingController {
 
 		return "user/user_setting";
 	}
-	
+
+	@Value("${file.upload-dir}")
+	private String uploadDir;
+
+	@PostMapping("/upload/profile")
+	public String handleFileUpload(@RequestParam("user_img") MultipartFile file, Model model, Principal principal)
+			throws IOException {
+		if (file.isEmpty()) {
+			return "업로드할 파일이 없습니다.";
+		}
+
+		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+		File directory = new File(uploadDir).getAbsoluteFile();
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		File dest = new File(directory, fileName);
+		file.transferTo(dest);
+
+		Optional<Users> _user = this.userService.getUser(principal.getName());
+		Users user = _user.get();
+		try {
+			this.userService.uploadUserProfile(user, fileName);
+		} catch (Exception e) {
+			System.out.println("프로필 변경 중 실패");
+			e.printStackTrace();
+		}
+
+		System.out.println("프로필 변경 성공");
+		return "redirect:/user/setting";
+	}
+
 	@PostMapping("/username/change")
 	public String changeUserName(@RequestParam("new_user_name") String newUserName, Principal principal) {
 		Optional<Users> _user = this.userService.getUser(principal.getName());

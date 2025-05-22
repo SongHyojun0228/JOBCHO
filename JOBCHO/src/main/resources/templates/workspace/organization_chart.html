@@ -5,12 +5,14 @@
 <head>
 	<title layout:title="조직도">조직도</title>
 	<link rel="stylesheet" th:href="@{/css/workspace/organization_chart.css}" />
+	<script th:src="@{/javascript/workspace/organization_search.js}" defer></script>
 </head>
 
 <body>
 	<div class="main" layout:fragment="content">
 		<div class="organization_container">
-			<input type="text" placeholder="참여 멤버">
+			<h2>조직도 <span>총 </span><span th:text="${members.size()}"></span><span>명</span></h2>
+			<input type="text" placeholder="참여 멤버" class="search_input">
 			<p class="team_member_text">팀 멤버</p>
 
 			<div class="member_list_container">

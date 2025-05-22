@@ -59,6 +59,10 @@ header {
 	align-items: center;
 }
 
+img {
+	object-fit: cover;
+}
+
 .jobcho_logo img {
 	width: 3rem;
 	height: 3rem;

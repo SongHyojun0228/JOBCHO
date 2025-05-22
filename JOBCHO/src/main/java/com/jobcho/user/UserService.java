@@ -38,6 +38,12 @@ public class UserService {
 		return userRepository.findByUserEmail(email);
 	}
 
+	public void uploadUserProfile(Users user, String profileImgName) {
+		user.setUserImg(profileImgName);
+		System.out.println(profileImgName + "로 이미지 변경");
+		this.userRepository.save(user);
+	}
+	
 	public void changeUserName(Users user, String newUserName) {
 		user.setUserName(newUserName);
 		this.userRepository.save(user);

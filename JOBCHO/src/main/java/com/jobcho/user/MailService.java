@@ -76,10 +76,10 @@ public class MailService {
 				<html>
 				<body style="font-family: Noto Sans Kr, sans-serif;">
 				    <div style="max-width: 55rem; margin: 0 auto; padding: 1.5rem; background: #fff; border: 1px solid #ddd; border-radius: 8px;">
-				        <h2 style="color: black;">🌿 %s 워크스페이스에 초대되었습니다!</h2>
+				        <h2 style="color: black; margin-top: 1rem;">🌿 %s 워크스페이스에 초대되었습니다!</h2>
 				        <p style="color: rgb(125, 125, 125); font-size: 1.2rem;">아래 버튼을 눌러 초대를 수락해주세요.</p>
-				        <div style="margin-block:1.5rem;">
-				            <a href="%s" style="background: rgb(6, 195, 115); color: rgb(250, 250, 250); padding: 10px 20px; text-decoration: none; border-radius: 5px; fort-size:1rem; font-weight: 500;">
+				        <div style="margin-bottom:1rem;">
+				            <a href="%s" style="background: rgb(6, 195, 115); color: rgb(250, 250, 250); padding: 10px 20px; text-decoration: none; border-radius: 5px; fort-size:1.2rem; font-weight: 500;">
 				                초대 수락하기
 				            </a>
 				        </div>

@@ -5,7 +5,6 @@
 <head>
 	<title layout:title="로그인">로그인</title>
 	<link rel="stylesheet" th:href="@{/css/user/sign_form.css}" />
-	<script th:src="@{/javascript/login.js}" defer></script>
 </head>
 
 <body>
@@ -23,15 +22,15 @@
 				<input type="password" placeholder="비밀번호" class="login_input input_password" name="user_password" />
 				<p class="caution">비밀번호를 입력해주세요.</p>
 				<div class="select_container">
-					<label class="checkbox">
+					<!-- <label class="checkbox">
 						<input type="checkbox" />이메일 기억하기
-					</label>
+					</label> -->
 					<label class="checkbox">
-						<input type="checkbox" />로그인 상태 유지
+						<input type="checkbox" name="remember-me" id="remember-me" />로그인 상태 유지
 					</label>
 					<a th:href="@{/user/find/password}" class="forgotpassword">비밀번호 찾기</a>
 				</div>
-				<button class="login_btn">로그인</button>
+				<button type="submit" class="login_btn">로그인</button>
 				<p class="signup">
 					잡초가 처음이신가요?
 					<a th:href="@{/user/signup}">회원가입</a>
@@ -39,6 +38,7 @@
 			</form>
 		</div>
 	</div>
+	<script th:src="@{/javascript/login.js}" defer></script>
 </body>
 
 </html>
