@@ -1,0 +1,122 @@
+.manage_team_container {
+	width: 700px;
+	margin: 2rem auto;
+	background: white;
+	padding: 2rem;
+	border: 1px solid lightgray;
+	border-radius: 8px;
+}
+
+.title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+}
+
+li {
+	list-style: none;
+}
+
+details summary::marker {
+	font-size: 0;
+}
+
+hr {
+	border: none;
+	border-bottom: 1px solid lightgray;
+	margin-bottom: 2rem;
+}
+
+.input_items,
+.team-icon,
+.team-name-change,
+.team-delete {
+	border: 1px solid lightgray;
+	padding: 1rem;
+	margin-bottom: 2rem;
+	border-radius: 6px;
+}
+
+h3 {
+	font-size: 1rem;
+	font-weight: bold;
+	margin-bottom: 0.5rem;
+}
+
+summary {
+	padding: 0.5rem;
+	background: #f5f5f5;
+}
+
+.options li {
+	padding: 0.5rem 0;
+}
+
+input[type="text"] {
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+	margin-right: 0.5rem;
+}
+
+button {
+	padding: 0.5rem 1rem;
+	background: green;
+	color: white;
+}
+
+.team-icon button {
+	margin-top: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: red;
+	color: white;
+}
+
+.warning {
+	color: red;
+	font-weight: bold;
+	margin-bottom: 1rem;
+}
+
+.delete-btn {
+	background: red;
+}
+
+.container {
+	position: relative;
+	cursor: pointer;
+	width: 140px;
+	height: 140px;
+}
+
+.container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	border-radius: 8px;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	font-weight: bold;
+	opacity: 0;
+	transition: opacity 0.2s;
+	border-radius: 8px;
+}
+
+.container:hover .overlay {
+	opacity: 1;
+}
+
+.team-icon p {
+	margin-bottom: 0.3rem;
+}

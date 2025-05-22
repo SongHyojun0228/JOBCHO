@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>팀 아이콘 변경</title>
+	<link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" />
+	<link rel="stylesheet" th:href="@{/css/team/imagemodify.css}" />
+
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+
+<body>
+	<h2>팀 아이콘 변경</h2>
+	<div class="crop-container">
+		<img id="cropImage" th:src="@{/team/temp-image/{id}(id=${1})}" alt="업로드된 이미지" />
+	</div>
+	<div class="btns">
+		<button class="btn-cancel" onclick="history.back()">닫기</button>
+		<button class="btn-confirm" id="cropBtn">확인</button>
+	</div>
+	<script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+	<script>
+		let cropper;
+		window.addEventListener("DOMContentLoaded", () => {
+			const image = document.getElementById("cropImage");
+			
+			cropper = new Cropper(image, {
+				aspectRatio: 1,
+				viewMode: 1,
+				dragMode: 'move',
+				autoCropArea: 1,
+				cropBoxResizable: true,
+				background: false
+			});
+
+			document.getElementById("cropBtn").addEventListener("click", () => {
+				const canvas = cropper.getCroppedCanvas({width: 320, height: 320});
+				canvas.toBlob(blob => {
+					const formData = new FormData();
+					formData.append("croppedImage", blob);
+
+					const token = document.querySelector('meta[name="_csrf"]').content;
+					const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+					fetch("/team/crop", {
+						method: "POST",
+						headers: {[header]: token},
+						body: formData
+					})
+						.then(res => {
+							if (res.ok) {
+								alert("아이콘이 저장되었습니다.");
+								location.href = "/team/manage";
+							} else {
+								alert("오류가 발생했습니다.");
+							}
+						});
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>

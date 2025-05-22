@@ -1,0 +1,94 @@
+<html layout:decorate="~{includes/layout}">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" th:href="@{/css/includes/shared.css}" />
+	<link rel="stylesheet" th:href="@{/css/team/manage.css}" />
+	<script th:src="@{/javascript/team/teammanage.js}" defer></script>
+	<title>팀 관리</title>
+</head>
+
+<body>
+	<main layout:fragment="content">
+		<div class="manage_team_container">
+			<p class="title">팀 관리</p>
+			<hr />
+
+			<div class="input_items invite_permission">
+				<h3>팀 초대 권한</h3>
+				<details>
+					<summary>
+						<span class="selected">
+							팀에 새로운 멤버를 초대할 수 있는 권한을 설정합니다.<br />
+							관리자만 초대 가능하도록 변경할 경우 관리자를 제외한<br />
+							멤버들은 초대가 불가능하게 되며, 기존 초대 링크 또한 만료됩니다.
+						</span>
+						<span class="arrow">▾</span>
+					</summary>
+					<ul class="options">
+						<li>
+							<label>
+								<input type="radio" name="invite_permission" value="all" />
+								모든 멤버 초대 가능<br>
+								<input id="id" type="text" placeholder="example@abc.com">
+								<button>링크 초기화</button>
+							</label>
+						</li>
+						<li>
+							<label>
+								<input type="radio" name="invite_permission" value="admin_only" checked />
+								관리자만 초대 가능
+							</label>
+						</li>
+					</ul>
+				</details>
+			</div>
+
+			<section class="team-icon">
+				<h3>팀 아이콘 변경</h3>
+				<p>팀 아이콘을 설정할 수 있습니다 (320px 이상의 정사각형 .PNG권장)</p>
+				<form id="uploadForm" action="/team/imageupload" method="post" enctype="multipart/form-data">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<div class="container" onclick="document.getElementById('fileInput').click()">
+						<img id="teamIcon" th:if="${uploadedImage == null}" th:src="@{/images/default_profile.png}"
+							alt="기본 아이콘" />
+						<img id="teamIcon" th:if="${uploadedImage != null}"
+							th:src="@{/team/temp-image/{id}(id=${workspaceId})}" alt="팀 아이콘" />
+						<div class="overlay">
+							<p>수정</p>
+						</div>
+					</div>
+					<input type="file" id="fileInput" name="file" hidden />
+				</form>
+				<form th:action="@{/team/delete-icon}" th:method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<button type="submit">아이콘 삭제하기</button>
+				</form>
+			</section>
+
+			<section class="team-name-change">
+				<h3>팀 이름 변경</h3>
+				<form th:action="@{/team/change-name}" th:method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<p>새로운 팀 이름</p>
+					<input type="text" name="teamName" th:value="${teamName}" placeholder="팀 이름을 입력하세요" required />
+					<button type="submit">팀 이름 변경하기</button>
+				</form>
+			</section>
+
+			<section class="team-delete">
+				<h3>팀 삭제</h3>
+				<p class="warning">
+					정말로 팀을 삭제하시겠습니까? 모든 메시지와 파일들이 삭제되면 복구할 수 없습니다.
+				</p>
+				<form th:action="@{/team/delete-team}" th:method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<button type="submit" class="delete-btn">팀 삭제하기</button>
+				</form>
+			</section>
+		</div>
+	</main>
+</body>
+
+</html>
