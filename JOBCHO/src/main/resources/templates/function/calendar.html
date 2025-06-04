@@ -14,7 +14,7 @@
 					center: "title",
 					right: "dayGridMonth,timeGridWeek,timeGridDay",
 				},
-				initialDate: "2023-01-12",
+				initialDate: new Date(),
 				navLinks: true,
 				selectable: true,
 				selectMirror: true,
@@ -120,7 +120,7 @@
 			calendar.render();
 		});
 	</script>
-	<link rel="stylesheet" th:href="@{/css/shared.css}" />
+	<link rel="stylesheet" th:href="@{/css/includes/shared.css}" />
 	<link rel="stylesheet" th:href="@{/css/calendar.css}" />
 </head>
 
