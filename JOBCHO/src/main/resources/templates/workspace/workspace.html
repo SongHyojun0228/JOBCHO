@@ -12,9 +12,10 @@
 		<link rel="stylesheet" th:href="@{/css/workspace/bookmark.css}" />
 		<link rel="stylesheet" th:href="@{/css/workspace/createtask.css}" />
 		<link rel="stylesheet" th:href="@{/css/workspace/detailtask.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/create_chat.css}" />
 	</head>
 
-	<body>
+	<body th:data-user-name="${user.userName}" th:data-user-id="${user.userId}">
 		<header>
 			<a th:href="@{/index}">
 				<div class="jobcho_logo">
@@ -62,17 +63,56 @@
 								<img th:src="@{/images/icons/cross-mark.png}" alt="새로 만들기 버튼" id="create_folder_btn">
 							</div>
 						</div>
-						<div th:each="folder : ${folders}" class="folder">
-							<div class="icon_box">
-								<img th:src="@{/images/icons/arrow-down.png}" alt="숨기기,보이기 화살표">
-								<a href=".." th:text="${folder.folderName}">Default folder</a>
+						<div th:each="folder, iterStat : ${folders}" class="folder">
+							<div class="icon_box" onclick="toggleFolder(this)">
+								<div class="folder_line">
+									<img th:src="@{/images/icons/arrow-down.png}" alt="숨기기,보이기 화살표"
+										class="folder_arrow">
+									<a href="#" th:text="${folder.folderName}">Default folder</a>
+								</div>
+								<img th:src="@{/images/icons/plus.png}" alt="채팅방 추가" class="addChatroombtn"
+								             th:attr="data-folder-index=${iterStat.index}" onclick="openModal(this)">
 							</div>
 							<div class="folder_in">
 								<div th:each="chatroom : ${folder.chatrooms}" class="icon_box_chat">
-									<img th:src="@{/images/icons/empty_star.png}" alt="즐겨찾기_빔">
+									<img th:src="@{/images/icons/empty_star.png}" alt="즐겨찾기_빔" class="star-icon"
+										onclick="toggleStar(this)">
 									<a th:href="@{/workspace/{workspaceId}/{chatroomId}(workspaceId=${folder.workspaceId}, chatroomId=${chatroom.chatroomId})}"
-										th:text="${chatroom.chatroomName}">
-										채팅방 이름</a>
+										th:text="${chatroom.chatroomName}">채팅방 이름</a>
+								</div>
+							</div>
+							<div class="modal2" th:attr="id='modal2-' + ${iterStat.index}">
+								<div class="createchat_total_container">
+									<p class="title">새 채팅 생성</p>
+									<form
+										th:action="@{/workspace/{workspaceId}/{chatroomId}/notificationcreate(workspaceId=${workspaceId}, chatroomId=${chatroomId})}"
+										class="register_form" method="post">
+										<p class="title2">채팅방 이름</p>
+										<input type="hidden" name="folderId" th:value="${folder.folderId}">
+										<div class="form_item">
+											<input type="text" maxlength="50" placeholder="채팅 이름" name="chatTitle" />
+										</div>
+
+										<p class="title2">채팅방 공개 여부</p>
+										<div class="form_item">
+											<select name="" id="">
+												<option value="">공개</option>
+												<option value="">비공개</option>
+											</select>
+										</div>
+
+										<p class="title2">채팅방 설명(옵션)</p>
+										<textarea name="notification_content" id="chatroom_content"
+											rows="10">유토 갈비뼈 쾌유 기원</textarea>
+										<p class="numbers_of_text">
+											<span class=""></span>
+											/ 5,000
+										</p>
+										<div class="btns">
+											<button class="cancel_btn">취소</button>
+											<button class="register_btn">등록하기</button>
+										</div>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -95,6 +135,7 @@
 					</div>
 				</div>
 				<div class="chat">
+
 					<div th:if="${chatrooms != null}">
 						<div class="chat_header">
 							<div class="chat_header_title">
@@ -114,6 +155,7 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="chat_main" data-chatroom-id="" th:data-chatroom-id="${chatroomId}">
 						<div class="chat_box" id="chat_box">
 							<!--
@@ -132,6 +174,7 @@
 									<img th:src="@{/images/icons/arrow-down.png}" id="plus_icon_notificaiton">
 								</div>
 							</div>
+
 							<div th:each="notification : ${notifications}" class="notification_more"
 								id="notificaiton_more">
 								<div class="notification_more_row1">
@@ -154,15 +197,22 @@
 									<a>숨기기</a>
 								</div>
 							</div>
+							<div class="chat_message" th:each="message : ${messages}">
+								<div class="chat_info">
+									<img class="chat_profile" src="/images/profileImg/default_profile.png" />
+									<span class="chat_sender" th:text="${message.senderId}">아이디</span>
+								</div>
+								<div class="chat_bubble" th:text="${message.content}">기존 챗 내용</div>
+							</div>
 
 						</div>
 						<div class="chat_input_box">
 							<input id="chat_input" type="text" placeholder="메시지를 입력하세요.">
-							<button onclick="sendMessage()">전송</button>
 						</div>
 						<div class="chat_emoticon">
 							<img th:src="@{/images/icons/emoticon.png}" alt="채팅 메뉴">
-							<button onclick=sandchat()><img th:src="@{/images/icons/arrow-chat.png}" alt=""></button>
+							<button onclick="sendMessage()"><img th:src="@{/images/icons/arrow-chat.png}"
+									alt=""></button>
 						</div>
 					</div>
 				</div>
@@ -364,6 +414,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 		<script>
 			let stompClient = null;
+			const userName = document.body.dataset.userName;
+			const userId = document.body.dataset.userId;
 
 			document.addEventListener('DOMContentLoaded', function () {
 				const chatroomId = document.querySelector('.chat_main').dataset.chatroomId;
@@ -374,7 +426,8 @@
 
 					stompClient.subscribe('/topic/chatroom/' + chatroomId, function (message) {
 						const msg = JSON.parse(message.body);
-						showMessage(msg.sender + ": " + msg.content);
+						// showMessage(msg.sender + ": " + msg.content); 기존엔 문자열로 넘기는거
+						showMessage(msg); // 이건 객체로 넘기는거
 					});
 				});
 			});
@@ -382,11 +435,16 @@
 			function sendMessage() {
 				const input = document.getElementById("chat_input");
 				const chatroomId = document.querySelector('.chat_main').dataset.chatroomId;
+				
+				if(input.value.length <= 0 ){
+					return;
+				}
 
 				const msg = {
-					sender: '테스터(임시)', // 나중에 로그인 사용자 이름으로 교체 할거임
+					sender: userName,
 					content: input.value,
 					chatroomId: chatroomId,
+					senderId : userId,
 				};
 
 				stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(msg));
@@ -395,9 +453,32 @@
 
 			function showMessage(message) {
 				const box = document.getElementById("chat_box");
-				const div = document.createElement("div");
-				div.textContent = message;
-				box.appendChild(div);
+
+				const messageContainer = document.createElement("div");
+				messageContainer.className = "chat_message";
+
+				const infoDiv = document.createElement("div");
+				infoDiv.className = "chat_info";
+
+				const profileImg = document.createElement("img");
+				profileImg.src = "/images/profileImg/default_profile.png";
+				profileImg.className = "chat_profile";
+
+				const senderSpan = document.createElement("span");
+				senderSpan.className = "chat_sender";
+				senderSpan.textContent = message.sender;
+
+				infoDiv.appendChild(profileImg);
+				infoDiv.appendChild(senderSpan);
+
+				const contentDiv = document.createElement("div");
+				contentDiv.className = "chat_bubble";
+				contentDiv.textContent = message.content;
+
+				messageContainer.appendChild(infoDiv);
+				messageContainer.appendChild(contentDiv);
+				box.appendChild(messageContainer);
+				box.scrollTop = box.scrollHeight;
 			}
 		</script>
 </div>

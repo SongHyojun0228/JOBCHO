@@ -10,5 +10,6 @@ import lombok.Setter;
 public class ChatMessage {
 	private String sender;
     private String content;
-    private String chatroomId;
+    private Integer chatroomId;
+    private Integer senderId;
 }

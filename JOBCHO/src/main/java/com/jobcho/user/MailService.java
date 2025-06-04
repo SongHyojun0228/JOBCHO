@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jobcho.member.InviteTokenService;
@@ -68,7 +67,7 @@ public class MailService {
 	@Async
 	public void sendInviteMail(String inviteEmail, Integer workspaceId, String workspaceName) {
 		String token = inviteTokenService.createInviteToken(workspaceId, inviteEmail);
-		String inviteUrl = "http://localhost:2003/workspace/invite/" + token;
+		String inviteUrl = "http://localhost:2003/workspace/invite/" + workspaceId + "/" + token;
 
 		String subject = "[" + workspaceName + "] 팀 초대 메일입니다.";
 
@@ -88,6 +87,44 @@ public class MailService {
 				</html>
 				"""
 				.formatted(workspaceName, inviteUrl);
+
+		MimeMessage message = javaMailSender.createMimeMessage();
+
+		try {
+			message.setFrom(senderEmail);
+			message.setRecipients(MimeMessage.RecipientType.TO, inviteEmail);
+			message.setSubject(subject);
+			message.setText(htmlBody, "UTF-8", "html");
+
+			javaMailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendChatroomInviteMail(String inviteEmail, Integer chatroomId, String chatroomName) {
+		String token = inviteTokenService.createInviteToken(chatroomId, inviteEmail);
+		String inviteUrl = "http://localhost:2003/workspace/chatroom/invite/" + chatroomId + "/" + token;
+		System.out.println("inviteUrl : " + inviteUrl);
+
+		String subject = "[" + chatroomName + "] 채팅방 초대 메일입니다.";
+
+		String htmlBody = """
+				<html>
+				<body style="font-family: Noto Sans Kr, sans-serif;">
+				    <div style="max-width: 55rem; margin: 0 auto; padding: 1.5rem; background: #fff; border: 1px solid #ddd; border-radius: 8px;">
+				        <h2 style="color: black; margin-top: 1rem;">🌿 %s 채팅방에 초대되었습니다!</h2>
+				        <p style="color: rgb(125, 125, 125); font-size: 1.2rem;">아래 버튼을 눌러 초대를 수락해주세요.</p>
+				        <div style="margin-bottom:1rem;">
+				            <a href="%s" style="background: rgb(6, 195, 115); color: rgb(250, 250, 250); padding: 10px 20px; text-decoration: none; border-radius: 5px; fort-size:1.2rem; font-weight: 500;">
+				                초대 수락하기
+				            </a>
+				        </div>
+				    </div>
+				</body>
+				</html>
+				"""
+				.formatted(chatroomName, inviteUrl);
 
 		MimeMessage message = javaMailSender.createMimeMessage();
 
