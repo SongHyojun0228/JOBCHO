@@ -70,5 +70,10 @@ public class WorkspaceService {
 		Workspaces workspcace = this.workspaceRepository.getById(workspaceId);
 		return workspcace.getWorkspaceName();
 	}
+	
+	public Workspaces findById(Integer id) {
+		return workspaceRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("해당 워크스페이스가 없습니다."));
+	}
 
 }

@@ -48,20 +48,19 @@
 			<section class="team-icon">
 				<h3>팀 아이콘 변경</h3>
 				<p>팀 아이콘을 설정할 수 있습니다 (320px 이상의 정사각형 .PNG권장)</p>
-				<form id="uploadForm" action="/team/imageupload" method="post" enctype="multipart/form-data">
+				<form id="uploadForm" th:action="@{|/team/${workspaceId}/imageupload|}" method="post" enctype="multipart/form-data">
 					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 					<div class="container" onclick="document.getElementById('fileInput').click()">
-						<img id="teamIcon" th:if="${uploadedImage == null}" th:src="@{/images/default_profile.png}"
-							alt="기본 아이콘" />
-						<img id="teamIcon" th:if="${uploadedImage != null}"
-							th:src="@{/team/temp-image/{id}(id=${workspaceId})}" alt="팀 아이콘" />
+						<img id="teamIcon"
+							th:src="@{'/team/' + ${workspaceId} + '/icon'}"
+							alt="팀 아이콘" />
 						<div class="overlay">
 							<p>수정</p>
 						</div>
 					</div>
 					<input type="file" id="fileInput" name="file" hidden />
 				</form>
-				<form th:action="@{/team/delete-icon}" th:method="post">
+				<form th:action="@{|/team/${workspaceId}/delete-icon|}" method="post">
 					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 					<button type="submit">아이콘 삭제하기</button>
 				</form>
@@ -69,7 +68,7 @@
 
 			<section class="team-name-change">
 				<h3>팀 이름 변경</h3>
-				<form th:action="@{/team/change-name}" th:method="post">
+				<form th:action="@{|/team/${workspaceId}/change-name|}" method="post">
 					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 					<p>새로운 팀 이름</p>
 					<input type="text" name="teamName" th:value="${teamName}" placeholder="팀 이름을 입력하세요" required />
@@ -82,10 +81,10 @@
 				<p class="warning">
 					정말로 팀을 삭제하시겠습니까? 모든 메시지와 파일들이 삭제되면 복구할 수 없습니다.
 				</p>
-				<form th:action="@{/team/delete-team}" th:method="post">
+				<form th:action="@{|/team/${workspaceId}/delete-team|}" method="post">
 					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 					<button type="submit" class="delete-btn">팀 삭제하기</button>
-				</form>
+				</form>			
 			</section>
 		</div>
 	</main>

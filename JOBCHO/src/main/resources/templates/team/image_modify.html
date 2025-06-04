@@ -14,18 +14,20 @@
 <body>
 	<h2>팀 아이콘 변경</h2>
 	<div class="crop-container">
-		<img id="cropImage" th:src="@{/team/temp-image/{id}(id=${1})}" alt="업로드된 이미지" />
+		<img id="cropImage" th:src="@{'/team/' + ${workspaceId} + '/temp-image'}" alt="업로드된 이미지" />
 	</div>
 	<div class="btns">
 		<button class="btn-cancel" onclick="history.back()">닫기</button>
 		<button class="btn-confirm" id="cropBtn">확인</button>
 	</div>
 	<script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
-	<script>
+	<script th:inline="javascript">
+		let workspaceId = /*[[${workspaceId}]]*/ 0;
+
 		let cropper;
 		window.addEventListener("DOMContentLoaded", () => {
 			const image = document.getElementById("cropImage");
-			
+
 			cropper = new Cropper(image, {
 				aspectRatio: 1,
 				viewMode: 1,
@@ -36,7 +38,7 @@
 			});
 
 			document.getElementById("cropBtn").addEventListener("click", () => {
-				const canvas = cropper.getCroppedCanvas({width: 320, height: 320});
+				const canvas = cropper.getCroppedCanvas({ width: 320, height: 320 });
 				canvas.toBlob(blob => {
 					const formData = new FormData();
 					formData.append("croppedImage", blob);
@@ -44,15 +46,15 @@
 					const token = document.querySelector('meta[name="_csrf"]').content;
 					const header = document.querySelector('meta[name="_csrf_header"]').content;
 
-					fetch("/team/crop", {
+					fetch("/team/" + workspaceId + "/crop", {
 						method: "POST",
-						headers: {[header]: token},
+						headers: { [header]: token },
 						body: formData
 					})
 						.then(res => {
 							if (res.ok) {
 								alert("아이콘이 저장되었습니다.");
-								location.href = "/team/manage";
+								location.href = "/team/" + workspaceId + "/manage";
 							} else {
 								alert("오류가 발생했습니다.");
 							}
