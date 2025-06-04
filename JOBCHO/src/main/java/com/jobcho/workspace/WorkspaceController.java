@@ -33,6 +33,7 @@ public class WorkspaceController {
 	private final TaskService taskService;
 	private final UserService userService;
 	private final MemberService memberService;
+	private final MessageService messageService;
 	
 	@GetMapping("/workspace/test")
 	public String list(Model model) {
@@ -48,17 +49,22 @@ public class WorkspaceController {
 	}
 	
 	@GetMapping("/workspace/{workspaceId}/{chatroomId}")
-	public String workspaceMain_selectChatRoom(@PathVariable("workspaceId") int workspaceId, @PathVariable("chatroomId") int chatroomId,Model model) {
+	public String workspaceMain_selectChatRoom(@PathVariable("workspaceId") int workspaceId, @PathVariable("chatroomId") int chatroomId,Model model, Principal principal) {
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Tasks> tasks = workspaceService.getTask(chatroomId);
 		List<Notifications> notifications = workspaceService.getNotifi(chatroomId);
+		List<Messages> messages = messageService.getMessage(chatroomId);
 		Chatrooms chatrooms = this.workspaceService.getChatroomWithChatId(chatroomId);
+		Optional<Users> _user = this.userService.getUser(principal.getName());
+		Users user = _user.get();
+		model.addAttribute("user", user);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("folders",folders);
 		model.addAttribute("chatroomId",chatroomId);
 		model.addAttribute("tasks",tasks);
 		model.addAttribute("chatrooms",chatrooms);
 		model.addAttribute("notifications",notifications);
+		model.addAttribute("messages",messages);
 		return "workspace/workspace";
 	}
 	
