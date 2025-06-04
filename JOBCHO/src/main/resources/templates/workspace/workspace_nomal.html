@@ -62,7 +62,7 @@
 						</div>
 						<div th:each="folder : ${folders}" class="folder">
 							<div class="icon_box">
-								<img th:src="@{/images/icons/arrow-down.png}" alt="숨기기,보이기 화살표">
+								<img th:src="@{/images/icons/arrow-down.png}" alt="숨기기,보이기 화살표" id="folder_arrow">
 								<a href=".." th:text="${folder.folderName}">Default folder</a>
 							</div>
 							<div class="folder_in">
@@ -114,8 +114,8 @@
 					</div>
 					<div class="chat_main">
 						<div class="chat_box">
-							<img th:src="@{/images/icons/cat.png}" alt="기본 시작 화면">
-							<p>오늘은 어디서 시작해볼까요?</p>
+							<img th:src="@{/images/icons/bbuuzzi.png}" alt="기본 시작 화면">
+							<p>이런! 채팅방에 입장하지 않았습니다!</p>
 							<p>자유로운 1:1 또는 그룹 대화는 '채팅'</p>
 						</div>
 					</div>

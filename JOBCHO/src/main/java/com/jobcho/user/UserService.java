@@ -43,7 +43,7 @@ public class UserService {
 		System.out.println(profileImgName + "로 이미지 변경");
 		this.userRepository.save(user);
 	}
-	
+
 	public void changeUserName(Users user, String newUserName) {
 		user.setUserName(newUserName);
 		this.userRepository.save(user);
@@ -69,6 +69,18 @@ public class UserService {
 
 	public boolean checkPassword(Users user, String inputPassword) {
 		return passwordEncoder.matches(inputPassword, user.getUserPassword());
+	}
+
+	public void updateIsActiveByEmail(String email, int isActive) {
+		System.out.println("업데이트 실행됨: " + email + ", isActive: " + isActive);
+		Users user = userRepository.findByUserEmail(email).orElseThrow();
+		user.setIsActive(isActive);
+		userRepository.save(user);
+	}
+
+	public String getEmailById(Integer userId) {
+		Users user = this.userRepository.getById(userId);
+		return user.getUserEmail();
 	}
 
 }
