@@ -16,15 +16,21 @@
 - 파일 업로드 및 다운로드
 - 관리자 페이지 및 사용자 권한 구분
 
+<br><br>
+
 ## 기술 스택
 - Spring Boot + Gradle
 - WebSocket (실시간 채팅)
 - ORACLE
-- HTML / CSS / JavaScript 
+- HTML / CSS / JavaScript
+  
+<br><br>
 
 ## 프로젝트 목적
 - 실무에 사용되는 협업툴의 동작 방식 이해
 - 실시간 통신 및 사용자 관리 기능 구현
+
+<br><br>
 
 ## 🔧 역할 및 기능 정리
 
