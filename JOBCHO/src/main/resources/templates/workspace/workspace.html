@@ -14,9 +14,15 @@
 		<link rel="stylesheet" th:href="@{/css/workspace/detailtask.css}" />
 		<link rel="stylesheet" th:href="@{/css/workspace/create_chat.css}" />
 		<script th:src="@{/javascript/workspace/bookmark.js}" defer></script>
+		<link rel="stylesheet" th:href="@{/css/workspace/organization_chart.css}" />
+		<link rel="stylesheet" th:href="@{/css/workspace/invite_chat_member.css}" />
+		<script th:src="@{/javascript/workspace/organization_search.js}" defer></script>
+		<script th:src="@{/javascript/workspace/workspace_click.js}" defer></script>
+		<script th:src="@{/javascript/workspace/invite_chat_member.js}" defer></script>
 	</head>
 
 	<body th:data-user-name="${user.userName}" th:data-user-id="${user.userId}">
+		<div id="modalBackdrop" class="modal_backdrop" style="display: none;"></div>
 		<header>
 			<a th:href="@{/index}">
 				<div class="jobcho_logo">
@@ -44,6 +50,8 @@
 		</header>
 		<main>
 			<div class="main">
+				<div th:replace="workspace/modal_invite_chat_member :: modal" class="invite_chat_member_container">
+				</div>
 				<div class="side_bar">
 					<div class="workroom">
 						<div class="search_chat_line">
@@ -170,7 +178,8 @@
 								<div class="chat_header_emoticon">
 									<img th:src="@{/images/icons/alarm-bell.png}" alt="알람">
 									<img th:src="@{/images/icons/currunt_users.png}" alt="현재 유저 이미지">
-									<img th:src="@{/images/icons/add-user.png}" alt="유저 추가 이미지">
+									<img th:src="@{/images/icons/add-user.png}" alt="유저 추가 이미지"
+										id="invite_chat_member_img">
 									<img th:src="@{/images/icons/more-options.png}" alt="더보기 이미지" id="plus_icon">
 									<div class="popup" id="popup">
 										<div class="popup_indiv">
@@ -216,8 +225,9 @@
 									class="notification_more" id="notificaiton_more">
 									<div class="notification_more_row1">
 										<div class="notification_more_item">
-											<img th:src="@{/uploads/profileImg/{img}(img=${notification.author.userImg})}">
-												<p th:text="${notification.author.userName}">사용자명</p>
+											<img
+												th:src="@{/uploads/profileImg/{img}(img=${notification.author.userImg})}">
+											<p th:text="${notification.author.userName}">사용자명</p>
 											<p th:text="${notification.createdDate}" class="notification_date">2025/5/15
 												AM
 												09:41</p>

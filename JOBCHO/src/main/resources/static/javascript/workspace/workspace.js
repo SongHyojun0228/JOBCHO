@@ -281,6 +281,12 @@ function shownotifi(btn){
 	modal.style.display = 'block';
 }
 
+function closenotifiCreate(event){
+	event.preventDefault;
+	overlay.style.display = 'block';
+	modal.style.display = 'block';
+}
+
 function shownotifiOnMessage(btn){
 	const content = btn.getAttribute('data-message-content');
 	const textarea = document.getElementById('notification_content');

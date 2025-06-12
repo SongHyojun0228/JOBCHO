@@ -1,10 +1,7 @@
 package com.jobcho.workspace;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,9 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jobcho.alarm.AlarmRepository;
 import com.jobcho.alarm.AlarmService;
@@ -34,10 +29,8 @@ import com.jobcho.message.MessageService;
 import com.jobcho.message.Messages;
 import com.jobcho.mychatroom.MyChatroom;
 import com.jobcho.mychatroom.MyChatroomService;
-import com.jobcho.notification.NotificationDTO;
 import com.jobcho.notification.NotificationService;
 import com.jobcho.notification.Notifications;
-import com.jobcho.task.TaskDto;
 import com.jobcho.task.TaskService;
 import com.jobcho.task.Tasks;
 import com.jobcho.user.UserService;
@@ -112,6 +105,7 @@ public class WorkspaceController {
 	public String workspaceMain(@PathVariable("workspaceId") int workspaceId, Model model, Principal principal) {
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
+		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
 
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
@@ -124,6 +118,7 @@ public class WorkspaceController {
 		Set<Integer> bookmarkedMessageIds = bookmarks.stream().map(Bookmarks::getMessageId).collect(Collectors.toSet());
 
 		model.addAttribute("user", user);
+		model.addAttribute("members", members);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("folders", folders);
 		model.addAttribute("bookmarks", bookmarks);
@@ -142,6 +137,7 @@ public class WorkspaceController {
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
+		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
 		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
 		Set<Integer> bookmarkedChatroomIds = bookmarks.stream().map(Bookmarks::getChatroomId)
 				.collect(Collectors.toSet());
@@ -150,6 +146,7 @@ public class WorkspaceController {
 		Set<Integer> bookmarkedMessageIds = bookmarks.stream().map(Bookmarks::getMessageId).collect(Collectors.toSet());
 
 		model.addAttribute("user", user);
+		model.addAttribute("members", members);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("MychatroomId", mychatroomId);
 		model.addAttribute("folders", folders);
@@ -166,6 +163,7 @@ public class WorkspaceController {
 			@PathVariable("chatroomId") int chatroomId, Model model, Principal principal) {
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
+		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
 
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Tasks> tasks = workspaceService.getTask(chatroomId);
@@ -182,6 +180,7 @@ public class WorkspaceController {
 		Set<Integer> bookmarkedMessageIds = bookmarks.stream().map(Bookmarks::getMessageId).collect(Collectors.toSet());
 
 		model.addAttribute("user", user);
+		model.addAttribute("members", members);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("folders", folders);
 		model.addAttribute("chatroomId", chatroomId);
