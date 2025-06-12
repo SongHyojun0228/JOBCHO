@@ -51,7 +51,7 @@
 }
 
 .under_container {
-  background-color: rgb(242, 244, 248);
+  background-color: rgb(244, 244, 248);
   padding-block: 1rem;
 }
 
@@ -67,6 +67,10 @@
   border-radius: 12px;
   padding: 1.2rem;
   margin-top: 1rem;
+}
+
+.tasks:hover{
+	background-color: rgb(242, 244, 248);
 }
 
 .task_status {

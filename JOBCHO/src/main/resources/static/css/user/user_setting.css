@@ -126,11 +126,19 @@
 	margin-bottom: 0.5rem;
 }
 
+.email_caution,
+.pw_caution {
+	color: rgb(196, 69, 65);
+	font-weight: 500;
+	display: none;
+	margin-bottom: 0.5rem;
+}
+
 .change_form input {
 	padding: 0.5rem;
 	width: 100%;
 	box-sizing: border-box;
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 .change_form input:focus {

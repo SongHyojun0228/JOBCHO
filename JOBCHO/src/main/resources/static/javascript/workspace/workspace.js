@@ -94,11 +94,12 @@ if (createLink != null) {
 
 if (taskDetailLink != null) {
 	taskDetailLink.addEventListener('click', (e) => {
-		e.preventDefault();
-		bookmarkTotalContainer.style.display = 'none';
-		voteTotalContainer.style.display = 'none';
-		taskTotalContainer.style.display = 'none';
-		taskDetailTotalContainer.style.display = 'block';
+		//e.preventDefault();
+		//const workspaceId = taskDetailLink.dataset.workspaceId;
+		//const chatroomId = taskDetailLink.dataset.chatroomId;
+		//const taskId = taskDetailLink.dataset.taskId;
+		//const url = `/workspace/${workspaceId}/${chatroomId}/side/${taskId}`;
+		//window.location.href = url;
 	})
 }
 
@@ -126,6 +127,44 @@ function openModal(btn) {
     }
 }
 
+function openSideTask(btn){
+	const workspaceId = btn.getAttribute("data-workspace-id");
+	const chatroomId = btn.getAttribute("data-chatroom-id");
+	const taskId = btn.getAttribute("data-task-id");
+	const url = `/workspace/${workspaceId}/${chatroomId}/side/${taskId}`;
+	window.location.href = url;
+}
+
+function openSideMessage(btn){
+	const workspaceId = btn.getAttribute("data-workspace-id");
+	const chatroomId = btn.getAttribute("data-chatroom-id");
+	const messageId = btn.getAttribute("data-message-id");
+	const url = `/workspace/${workspaceId}/${chatroomId}/side/message/${messageId}`;
+	window.location.href = url;
+}
+
+function showModifyChat(btn){
+	const workspaceId = btn.getAttribute("data-workspace-id");
+	const chatroomId = btn.getAttribute("data-chatroom-id");
+	const url = `/workspace/${workspaceId}/${chatroomId}/side/modifyChat`;
+	window.location.href = url;
+}
+
+function openChatMenu(index) {
+  const menu = document.getElementById("chatmenu-" + index);
+  if (menu) {
+	menu.style.visibility = 'visible'
+    menu.style.opacity = 1;
+  }
+}
+
+function closeChatMenu(index) {
+  const menu = document.getElementById("chatmenu-" + index);
+  if (menu) {
+	menu.style.visibility = 'none'
+	menu.style.opacity = 0;
+  }
+}
 
 //아이콘 메뉴 더보기
 menuLink.addEventListener('click', (e) => {
@@ -232,6 +271,57 @@ function toggleFolder(folderHeader) {
         const currentSrc = arrowImg.getAttribute('src');
         arrowImg.setAttribute('src', currentSrc.includes('arrow-down') ? rightArrow : downArrow);
     }
+}
+
+function shownotifi(btn){
+	const content = btn.getAttribute('data-notification-content');
+	const textarea = document.getElementById('notification_content');
+	textarea.value = content;
+	overlay.style.display = 'block';
+	modal.style.display = 'block';
+}
+
+function shownotifiOnMessage(btn){
+	const content = btn.getAttribute('data-message-content');
+	const textarea = document.getElementById('notification_content');
+	textarea.value = content;
+	overlay.style.display = 'block';
+	modal.style.display = 'block';
+}
+
+function showMessageEdit(btn){
+	const content = btn.getAttribute('data-message-content');
+	const messageId = btn.getAttribute('data-message-id');
+	const textarea = document.getElementById('message_content');
+	const idArea = document.getElementById('messageId');
+	const modal3 = document.getElementById('modal3');
+	textarea.value = content;
+	idArea.value = messageId;
+	overlay.style.display = 'block';
+	modal3.style.display = 'block';
+}
+
+function showTaskOnMessage(btn){
+	const content = btn.getAttribute('data-message-content');
+	const textarea = document.getElementById('task_content');
+	textarea.value = content;
+	wrapper.classList.toggle('show-aside');
+	bookmarkTotalContainer.style.display = 'none';
+	voteTotalContainer.style.display = 'none';
+	taskDetailTotalContainer.style.display = 'none';
+	taskTotalContainer.style.display = 'none';
+	createToatalContainer.style.display = 'block';
+}
+
+function showAlertDel(){
+	const modal4 = document.getElementById('modal4');
+	overlay.style.display = 'block';
+	modal4.style.display = 'block';
+}
+function showAlertOut(){
+	const modal5 = document.getElementById('modal5');
+	overlay.style.display = 'block';
+	modal5.style.display = 'block';
 }
 
 document.getElementById("chat_input").addEventListener("keydown", function(event) {

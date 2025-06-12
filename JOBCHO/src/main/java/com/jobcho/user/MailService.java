@@ -24,7 +24,7 @@ public class MailService {
 	private final UserService userService;
 	private final InviteTokenService inviteTokenService;
 
-	// 비밀번호 찾기
+	// 🌿 비밀번호 변경 메일 전송 메서드
 	@Async
 	public void sendMail(String mail) {
 		int number = createNumber();
@@ -50,20 +50,23 @@ public class MailService {
 		}
 	}
 
+	// 🌿 인증번호 ( 임시 비밀번호 ) 불러오기 메서드
 	public int getVerificationNumber(String mail) {
 		return emailVerificationMap.getOrDefault(mail, -1);
 	}
 
+	// 🌿 인증번호 ( 임시 비밀번호 ) 생성 메서드
 	private int createNumber() {
 		return (int) (Math.random() * (900000000)) + 1000000000;
 	}
 
+	// 🌿 인증번호 ( 임시 비밀번호 ) 검증 메서드
 	public boolean checkVerificationNumber(String mail, int userNumber) {
 		int storedNumber = getVerificationNumber(mail);
 		return storedNumber == userNumber;
 	}
 
-	// 팀 초대 링크
+	// 🌿 워크스페이스 초대 이메일 전송 메서드
 	@Async
 	public void sendInviteMail(String inviteEmail, Integer workspaceId, String workspaceName) {
 		String token = inviteTokenService.createInviteToken(workspaceId, inviteEmail);
@@ -101,7 +104,8 @@ public class MailService {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// 🌿 채팅방 초대 이메일 전송 메서드
 	public void sendChatroomInviteMail(String inviteEmail, Integer chatroomId, String chatroomName) {
 		String token = inviteTokenService.createInviteToken(chatroomId, inviteEmail);
 		String inviteUrl = "http://localhost:2003/workspace/chatroom/invite/" + chatroomId + "/" + token;
@@ -139,4 +143,5 @@ public class MailService {
 			e.printStackTrace();
 		}
 	}
+	
 }

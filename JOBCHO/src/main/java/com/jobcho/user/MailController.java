@@ -3,28 +3,23 @@ package com.jobcho.user;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class MailController {
 
 	private MimeMessage number; // 이메일 인증 숫자를 저장하는 변수
 
 	private final MailService mailService;
 
-	// 생성자 주입
-	public MailController(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	// 인증 이메일 전송
+	// 🌿 인증 이메일 전송 POST
 	@PostMapping("/mailSend")
 	@ResponseBody
 	public Map<String, Object> mailSend(@RequestParam("mail") String mail) {
@@ -33,7 +28,7 @@ public class MailController {
 		try {
 			mailService.sendMail(mail);
 
-			int verificationCode = mailService.getVerificationNumber(mail); // 예시
+			int verificationCode = mailService.getVerificationNumber(mail);
 
 			map.put("success", true);
 			map.put("number", verificationCode);

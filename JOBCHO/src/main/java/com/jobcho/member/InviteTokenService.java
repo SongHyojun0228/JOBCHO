@@ -13,6 +13,7 @@ public class InviteTokenService {
 	 
 	private final InviteTokenRepository inviteTokenRepository;
 	
+    // 🌿 이메일초대 토큰 생성 메서드
 	public String createInviteToken(Integer workspaceId, String inviteEmail) {
 	    String token = UUID.randomUUID().toString();
 
@@ -26,8 +27,5 @@ public class InviteTokenService {
 	    inviteTokenRepository.save(inviteToken);
 	    return token;
 	}
-	
-	
-
 	
 }

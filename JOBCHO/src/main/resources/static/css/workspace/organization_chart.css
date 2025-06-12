@@ -21,10 +21,6 @@ input {
 	margin-bottom: 3rem;
 }
 
-p {
-	color: rgb(169, 169, 169);
-}
-
 .team_member_text {
 	font-weight: 400;
 	margin-bottom: 1.5em;
@@ -56,4 +52,15 @@ p {
 	margin-left: 0.5rem;
 	color: rgb(125, 125, 125);
 	color: black;
+}
+
+.is_active {
+	display: flex;
+	align-items: center;
+}
+
+.is_active img {
+	width: 0.5rem;
+	height: 0.5rem;
+	margin-left: 0.5rem	;
 }

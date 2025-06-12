@@ -2,11 +2,20 @@ package com.jobcho.workspace;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
+import com.jobcho.chatroom.ChatroomRepository;
+import com.jobcho.chatroom.Chatrooms;
+import com.jobcho.folder.FolderRepository;
+import com.jobcho.folder.Folders;
 import com.jobcho.member.MemberService;
+import com.jobcho.mychatroom.MyChatroomService;
+import com.jobcho.notification.NotificationRepository;
+import com.jobcho.notification.Notifications;
+import com.jobcho.task.TaskRepository;
+import com.jobcho.task.Tasks;
 import com.jobcho.user.Users;
+import com.jobcho.workspace_domain.WorkspaceDomainService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +30,8 @@ public class WorkspaceService {
 	
 	private final WorkspaceRepository workspaceRepository;
 	private final MemberService memberService;
+	private final WorkspaceDomainService workspaceDomainService;
+	private final MyChatroomService myChatroomService;
 	
 	public List<Folders> getFolderWithChatrooms(int workspaceId){
 		List<Folders> folders = folderRepository.findByWorkspaceId(workspaceId);
@@ -35,12 +46,21 @@ public class WorkspaceService {
 	}
 	
 	public List<Tasks> getTask(int chatroomId){
-		List<Tasks> tasks = taskRepository.findByChatroomId(chatroomId);
+		List<Tasks> tasks = taskRepository.findByChatroom_ChatroomId(chatroomId);
 		return tasks;
 	}
 	
+	public Tasks getTaskWithTaskId(int taskId) {
+		Optional<Tasks> task = this.taskRepository.findById(taskId);
+		if(task.isPresent()) {
+			return task.get();
+		}else {
+			return task.orElse(new Tasks());
+		}
+	}
+	
 	public List<Notifications> getNotifi(int chatroomId){
-		List<Notifications> notifications = notificationRepository.findByChatroomId(chatroomId);
+		List<Notifications> notifications = notificationRepository.findByChatroom_ChatroomId(chatroomId);
 		return notifications;
 	}
 	
@@ -53,7 +73,7 @@ public class WorkspaceService {
 		}
 	}
 
-	public void createWorkspace(Users user, String workspaceName, String workspaceDomain) {
+	public Integer createWorkspace(Users user, String workspaceName, String workspaceDomain) {
 		Workspaces workspace = new Workspaces();
 		workspace.setWorkspaceName(workspaceName);
 		workspace.setWorkspaceDomain(workspaceDomain);
@@ -62,8 +82,14 @@ public class WorkspaceService {
 		Workspaces savedWorkspace = workspaceRepository.save(workspace);
 
 		memberService.createMember(user, savedWorkspace);
+		this.workspaceDomainService.createWorkspaceDomain(workspace.getWorkspaceId(), workspace.getWorkspaceDomain(),
+				"/workspace/" + workspace.getWorkspaceId());
+		
+		this.myChatroomService.createMyChatroom(user, workspace);
 
-		System.out.println("workspaceRepository : " + workspaceRepository);
+		System.out.println("<<< workspaceRepository.createWorkspace 호출 >>> : 워크스페이스 생성");
+		
+		return workspace.getWorkspaceId();
 	}
 
 	public String getWorkspaceNameById(Integer workspaceId) {

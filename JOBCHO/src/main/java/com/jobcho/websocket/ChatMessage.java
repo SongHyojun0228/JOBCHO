@@ -1,6 +1,6 @@
 package com.jobcho.websocket;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,11 @@ import lombok.Setter;
 @Setter
 public class ChatMessage {
 	private String sender;
+	private String receiver;
     private String content;
     private Integer chatroomId;
     private Integer senderId;
+    private Integer receiverId;
+    
+    private List<String> mentions;
 }
