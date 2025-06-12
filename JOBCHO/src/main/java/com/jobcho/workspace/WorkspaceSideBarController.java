@@ -73,6 +73,7 @@ public class WorkspaceSideBarController {
 		List<Messages> messages = messageService.getMessage(chatroomId);
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
+		MyChatroom mychat = myChatroomService.findMychatByUserID(user.getUserId());
 		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
 		Set<Integer> bookmarkedChatroomIds = bookmarks.stream().map(Bookmarks::getChatroomId)
 				.collect(Collectors.toSet());
@@ -95,7 +96,8 @@ public class WorkspaceSideBarController {
 		model.addAttribute("bookmarkedChatroomIds", bookmarkedChatroomIds);
 		model.addAttribute("bookmarkedMyChatroomIds", bookmarkedMyChatroomIds);
 		model.addAttribute("bookmarkedMessageIds", bookmarkedMessageIds);
-		return "workspace/workspace_sidebar";
+		model.addAttribute("mychat", mychat);
+		return "workspace/workspace_sidebar_taskDetail";
 	}
 
 	// 🌿 사이드바 채팅 수정 GET

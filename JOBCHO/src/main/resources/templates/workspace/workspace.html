@@ -216,7 +216,7 @@
 									class="notification_more" id="notificaiton_more">
 									<div class="notification_more_row1">
 										<div class="notification_more_item">
-											<img th:src="@{/uploads/profileImg/{img}(img=${notification.author.userImg})}"
+											<img th:src="@{/uploads/profileImg/{img}(img=${notification.author.userImg})}">
 												<p th:text="${notification.author.userName}">사용자명</p>
 											<p th:text="${notification.createdDate}" class="notification_date">2025/5/15
 												AM

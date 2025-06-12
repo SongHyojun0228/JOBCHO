@@ -115,6 +115,7 @@ public class WorkspaceController {
 
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
+		MyChatroom mychat = myChatroomService.findMychatByUserID(user.getUserId());
 
 		Set<Integer> bookmarkedChatroomIds = bookmarks.stream().map(Bookmarks::getChatroomId)
 				.collect(Collectors.toSet());
@@ -129,8 +130,9 @@ public class WorkspaceController {
 		model.addAttribute("bookmarkedChatroomIds", bookmarkedChatroomIds);
 		model.addAttribute("bookmarkedMyChatroomIds", bookmarkedMyChatroomIds);
 		model.addAttribute("bookmarkedMessageIds", bookmarkedMessageIds);
+		model.addAttribute("mychat", mychat);
 
-		return "workspace/workspace_nomal";
+		return "workspace/workspace_basic";
 	}
 
 	// 🌿 나와의 채팅 GET
