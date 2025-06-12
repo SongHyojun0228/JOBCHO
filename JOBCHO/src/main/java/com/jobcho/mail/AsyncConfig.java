@@ -1,4 +1,4 @@
-package com.jobcho;
+package com.jobcho.mail;
 
 import java.util.concurrent.Executor;
 

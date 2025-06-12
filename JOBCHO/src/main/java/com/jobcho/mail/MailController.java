@@ -1,4 +1,4 @@
-package com.jobcho.user;
+package com.jobcho.mail;
 
 import java.util.HashMap;
 import java.util.Map;

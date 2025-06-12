@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jobcho.user.MailService;
+import com.jobcho.mail.MailService;
 import com.jobcho.workspace.WorkspaceService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,6 @@ public class MemberController {
 	private final MailService mailService;
 	private final WorkspaceService workspaceService;
 
-	
 	@GetMapping("/workspace/invite/{workspaceId}/{token}")
 	public String acceptInvite(@PathVariable("token") String token,
 			@PathVariable("workspaceId") String workspaceId, Principal principal) {
@@ -43,7 +42,6 @@ public class MemberController {
 		System.out.println("초대된 이메일 : " + inviteEmail + ", 로그인한 유저 이메일 : " + userEmail);
 
 		if (!inviteEmail.equals(userEmail)) {
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("초대된 사용자가 아닙니다.");
 			System.out.println("초대된 사용자가 아닙니다.");
 			return "error/404";
 		}
@@ -52,7 +50,6 @@ public class MemberController {
 
 		inviteTokenRepository.delete(inviteToken);
 
-//		return ResponseEntity.ok("초대가 수락되었습니다! 워크스페이스로 이동합니다.");
 		System.out.println("초대가 수락되었습니다! 워크스페이스로 이동합니다.");
 		return "redirect:/workspace/" + workspaceId;
 	}

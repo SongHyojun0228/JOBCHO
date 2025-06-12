@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jobcho.chatroom.ChatroomService;
+import com.jobcho.mail.MailService;
 import com.jobcho.member.InviteToken;
 import com.jobcho.member.InviteTokenRepository;
 import com.jobcho.member.MemberService;
-import com.jobcho.user.MailService;
 import com.jobcho.user.UserService;
 import com.jobcho.user.Users;
 

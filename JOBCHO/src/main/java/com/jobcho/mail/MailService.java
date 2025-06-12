@@ -1,4 +1,4 @@
-package com.jobcho.user;
+package com.jobcho.mail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.jobcho.member.InviteTokenService;
+import com.jobcho.user.UserService;
+import com.jobcho.user.Users;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
