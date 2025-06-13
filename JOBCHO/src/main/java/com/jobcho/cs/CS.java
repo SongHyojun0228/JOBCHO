@@ -6,7 +6,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.jobcho.user.Users;
-import com.jobcho.workspace.Workspaces;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +23,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @DynamicInsert
+@Transactional
 public class CS {
 
 	@Id
@@ -33,7 +34,7 @@ public class CS {
 	@ManyToOne
 	@JoinColumn(name = "sender_id")
 	private Users sender;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "receiver_id")
 	private Users receiver;
@@ -56,8 +57,7 @@ public class CS {
 	@ColumnDefault("0")
 	private Integer isDeleted;
 	
-	@ManyToOne
-	@JoinColumn(name = "cschatroom_id")
-	private CsChatroom csChatroomId;
+	@Column
+	private Integer csChatroomId;
 
 }

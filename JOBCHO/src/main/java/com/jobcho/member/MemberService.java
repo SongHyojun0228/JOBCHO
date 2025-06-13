@@ -19,10 +19,12 @@ public class MemberService {
 	private final WorkspaceRepository workspaceRepository;
 	private final UserRepository userRepository;
 
+    // 🌿 각 유저의 워크스페이스 찾기 메서드
 	public List<Workspaces> findWorkspacesByUserUserId(Integer userId) {
 		return memberRepository.findWorkspacesByUserUserId(userId);
 	}
 
+    // 🌿 워크스페이스 멤버 추가 메서드
 	public void createMember(Users user, Workspaces workspace) {
 		Members member = new Members();
 		member.setUser(user);
@@ -30,10 +32,12 @@ public class MemberService {
 		this.memberRepository.save(member);
 	}
 
+    // 🌿 해당 워크스페이스에 해당하는 유저 찾기 메서드
 	public List<Users> findUsersByWorkspaceId(Integer workspaceId) {
 		return memberRepository.findUsersByWorkspaceId(workspaceId);
 	}
 
+    // 🌿 워크스페이스 멤버 추가 메서드
 	public void addMember(Integer workspaceId, String email) {
 	    Workspaces workspace = workspaceRepository.findById(workspaceId)
 	        .orElseThrow(() -> new IllegalArgumentException("워크스페이스 없음"));
@@ -41,7 +45,6 @@ public class MemberService {
 	    Users user = userRepository.findByUserEmail(email)
 	        .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
 	    System.out.println("유저 이메일, 이름 : " + user.getUserEmail() + ", " +  user.getUserName());
-	    
 	    
 	    if (!memberRepository.existsByWorkspaceAndUser(workspace, user)) {
 	    	System.out.println("멤버 추가 : " + user.getUserEmail() + ", " + user.getUserName());
@@ -54,5 +57,4 @@ public class MemberService {
 	    	System.out.println("해당 유저는 해당 워크 스페이스에 이미 존재");
 	    }
 	}
-
 }
