@@ -11,7 +11,7 @@ import com.jobcho.workspace.Workspaces;
 
 public interface MemberRepository extends JpaRepository<Members, Integer> {
 
-	@Query("SELECT m.workspace FROM Members m WHERE m.user.userId = :userId")
+	@Query("SELECT m.workspace FROM Members m WHERE m.user.userId = :userId ORDER BY m.workspace.workspaceId")
 	List<Workspaces> findWorkspacesByUserUserId(@Param("userId") Integer userId);
 
 	@Query("SELECT m.user FROM Members m WHERE m.workspace.workspaceId = :workspaceId ORDER BY m.user.userName ASC")

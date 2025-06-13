@@ -29,4 +29,5 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	inputEmail.addEventListener("input", checkFormValid);
+	
 });

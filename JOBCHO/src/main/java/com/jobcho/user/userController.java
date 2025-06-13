@@ -7,9 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -22,26 +20,22 @@ public class userController {
 		this.userService = userService;
 	}
 
+	// 🌿 메인화면 페이지 GET
 	@GetMapping("/index")
-	public String index() {
+	public String index() {	
 		return "index";
 	}
 
-	// 📌 회원가입 페이지
+	// 🌿 회원가입 페이지 GET
 	@GetMapping("/signup")
 	public String getSignup(UserCreateForm userCreateForm) {
 		return "user/signup";
 	}
 
-	// 📌 회원가입
+	// 🌿 회원가입 POST
 	@PostMapping("/signup")
 	public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "user/signup";
-		}
-
-		if (!userCreateForm.getUserPassword().equals(userCreateForm.getUserCheckPassword())) {
-			bindingResult.rejectValue("checkPassword", "passwordInCorrect", "2개의 비밀번호가 일치하지 않습니다");
 			return "user/signup";
 		}
 
@@ -50,7 +44,7 @@ public class userController {
 					userCreateForm.getUserName());
 		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
-			bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
+			bindingResult.reject("signupFailed", "이미 등록된 이메일입니다.");
 			return "user/signup";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,14 +55,14 @@ public class userController {
 		return "redirect:/";
 	}
 
-	// 📌 로그인 페이지
+	// 🌿 로그인 페이지 GET
 	@GetMapping("/login")
 	public String getLogin(Model model) {
 		model.addAttribute("title", "로그인");
 		return "user/login";
 	}
 	
-	// 📌 비밀번호 찾기
+	// 🌿 비밀번호 찾기 페이지 GET
 	@GetMapping("/find/password")
 	public String getTest(Model model) { 
 		model.addAttribute("title", "비밀번호 찾기");

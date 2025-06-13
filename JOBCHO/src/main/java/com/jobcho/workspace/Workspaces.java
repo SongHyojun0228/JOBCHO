@@ -38,7 +38,7 @@ public class Workspaces {
 	@Column
 	private String workspaceImg;
 
-	@Column
+	@Column(unique = true)
 	private String workspaceDomain;
 	
 	@OneToMany(mappedBy = "workspace")
@@ -47,4 +47,5 @@ public class Workspaces {
 	@ManyToOne
 	@JoinColumn(name = "workspace_owner_id")  
 	private Users owner;
+	
 }

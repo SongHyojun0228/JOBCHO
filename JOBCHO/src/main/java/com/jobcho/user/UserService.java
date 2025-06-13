@@ -24,7 +24,8 @@ public class UserService {
 		user.setUserPassword(passwordEncoder.encode(password));
 		this.userRepository.save(user);
 
-		cschatRoomService.createCsChatRoom(user);
+		// 각 유저 당 하나의 1:1 고객센터 채팅방
+		this.cschatRoomService.createCsChatRoom(user);
 		return user;
 	}
 
@@ -81,6 +82,11 @@ public class UserService {
 	public String getEmailById(Integer userId) {
 		Users user = this.userRepository.getById(userId);
 		return user.getUserEmail();
+	}
+
+	public Integer findUserIdByUserName(String userName) {
+		Users user = userRepository.findByUserName(userName);
+	    return (user != null) ? user.getUserId() : null;
 	}
 
 }

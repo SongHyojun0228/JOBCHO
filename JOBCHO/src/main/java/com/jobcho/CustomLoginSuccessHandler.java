@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
+	// 🌿 로그인 성공 시 메인 화면으로 이동
 	public CustomLoginSuccessHandler() {
 		setDefaultTargetUrl("/");
 		setAlwaysUseDefaultTargetUrl(true);
@@ -25,6 +26,8 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	// 🌿 로그인 성공 시, 이메일을 가져오고
+	// 해당 이메일을 통해 유저의 "현재 활동 중 = 1" 업데이트
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {

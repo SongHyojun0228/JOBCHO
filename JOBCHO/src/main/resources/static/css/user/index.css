@@ -1,8 +1,7 @@
 .profile_container,
 .team_list_container {
 	width: 50rem;
-	margin: auto;
-	margin-top: 2rem;
+	margin: 2rem auto 5rem auto;
 }
 
 h3 {
@@ -27,7 +26,12 @@ h3 {
 	margin: auto;
 }
 
-.profile_container img,
+.profile_container img {
+	width: 5rem;
+	height: 5rem;
+	border-radius: 30%;
+}
+
 .team img {
 	width: 4rem;
 	height: 4rem;
@@ -75,12 +79,17 @@ h3 {
 	justify-content: space-between;
 }
 
+.profile_info {
+	padding-block: 0.5rem;
+}
+
 .profile_info p:first-child {
-	font-size: 1.3rem;
+	font-size: 1.5rem;
 	font-weight: 500;
 }
 
 .profile_info p:last-child {
+	font-size: 1.2rem;
 	color: rgb(125, 125, 125);
 }
 
@@ -89,10 +98,10 @@ h3 {
 	font-weight: 600;
 }
 
-.team_info p:last-child {
-	color: rgb(125, 125, 125);
+.team_info_team_owner {
+	color: rgb(168, 168, 168);
 	font-weight: 500;
-	margin-top: 1rem;
+	font-size: 0.9rem;
 }
 
 .team_info a {
@@ -101,15 +110,50 @@ h3 {
 	color: rgb(169, 169, 169);
 }
 
+.team_name_alarm {
+	display: flex;
+	align-items: center;
+}
+
+.alarm_size {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 0.7rem;
+	height: 1.5rem;
+	margin-left: 0.4rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: rgb(248,230,232);
+	background-color: rgb(169,69,65);
+	border-radius: 6px;
+}
+
+.owner_info {
+	margin-top: 1rem;
+	display: flex;
+	gap: 0.3rem;
+	align-items: center;
+}
+
+.owner_info p:first-child {
+	background-color: rgba(79, 130, 252, 0.2);
+	color: rgb(79, 130, 252);
+	font-size: 0.9rem;
+	padding: 0.15rem;
+	border-radius: 6px;
+}
+
 .team_btn a {
-	padding: 0.7rem;
+	padding: 0.5rem 0.7rem;
 	font-weight: 500;
 	border-radius: 4px;
+	font-size: 0.9rem;
 }
 
 .team_btn a:first-child {
-	border: 1px solid rgb(169, 169, 169);
-	color: rgb(169, 169, 169);
+	border: 1px solid rgb(125, 125, 125);
+	color: rgb(125, 125, 125);
 	margin-right: 0.5rem;
 }
 

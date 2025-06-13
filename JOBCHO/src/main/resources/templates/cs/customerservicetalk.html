@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{includes/layout}" lang="ko">
+
+<head>
+	<title layout:title="문의사항">문의사항</title>
+	<link rel="stylesheet" th:href="@{/css/cs/customerservicetalk.css}" />
+</head>
+
+<body>
+	<div class="main" layout:fragment="content">
+		<div class="total_container">
+			<div class="talk_container" th:data-cs-chatroom-id="${csChatroomId}">
+				<div class="talk_header">
+					<!-- <img th:src="@{/images/Jobcho_logo.png}" alt="" /> -->
+					<p>고객센터 1 : 1 채팅</p>
+				</div>
+				<div class="talk_main">
+					<div class="scroll_container">
+						<div class="talk_main_start">
+							<img th:src="@{/images/Jobcho_logo.png}" alt="" />
+							<p>Jobcho에 문의하기</p>
+							<p th:text="'가입날짜 : ' + ${user.createdDate}"></p>
+						</div>
+
+						<div class="talk_content_container">
+							<div class="talk_show" id="chat_box">
+								<div class="chat_message" th:each="message : ${messages}">
+									<div th:if="${message.sender.userId == user.userId}" class="mine_chat">
+										<div class="chat_user_info">
+											<span class="chat_sender" th:text="${message.sender.userName}">유저명</span>
+										</div>
+										<div class="chat_bubble" th:text="${message.content}">기존 챗 내용</div>
+									</div>
+									
+									<div th:if="${message.sender.userId != user.userId}" class="partner_chat">
+										<div class="chat_user_info">
+											<span class="chat_sender" th:text="${message.sender.userName}">유저명</span>
+										</div>
+										<div class="chat_bubble" th:text="${message.content}">기존 챗 내용</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="talk_input">
+							<input id="chat_input" type="text" placeholder="메시지를 입력하세요.">
+							<button onclick="sendMessage()">전송</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="x_btn" onclick="close_window">
+				<img th:src="@{/images/icons/cross-mark.png}" alt="" />
+			</div>
+		</div>
+		<script th:src="@{/javascript/cs/close_service_center.js}" defer></script>
+		<script th:src="@{/javascript/cs/customer_service_chat.js}" defer></script>
+		<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// 웹소켓 연결 
+				const talkContainer = document.querySelector('.talk_container');
+
+				if (!talkContainer) {
+					console.error("talk_container not found");
+					return;
+				}
+
+				const csChatroomId = talkContainer.dataset.csChatroomId;
+				console.log("csChatroomId : " + csChatroomId);
+
+				const socket = new SockJS('/ws');
+				stompClient = Stomp.over(socket);
+
+				stompClient.connect({}, function () {
+					stompClient.subscribe('/cs/chat/' + csChatroomId, function (message) {
+						const msg = JSON.parse(message.body);
+						showMessage(msg);
+					});
+				});
+			});
+
+			// 메세지 보내기
+			function sendMessage() {
+				const input = document.getElementById("chat_input");
+				const csChatroomId = document.querySelector('.talk_container').dataset.csChatroomId;
+
+				if (input.value.length <= 0) {
+					return;
+				}
+
+				const msg = {
+					sender: '[[${user.userName}]]',
+					content: input.value,
+					csChatroomId: csChatroomId,
+					senderId: '[[${user.userId}]]',
+				};
+
+				stompClient.send("/app/chat.sendCsMessage", {}, JSON.stringify(msg));
+				input.value = '';
+			}
+
+			function showMessage(message) {
+				const box = document.querySelector(".talk_content_container");
+
+				const messageContainer = document.createElement("div");
+				messageContainer.className = "chat_message";
+
+				const infoDiv = document.createElement("div");
+				infoDiv.className = "chat_user_info";
+
+				/*const profileImg = document.createElement("img");
+				profileImg.src = "/images/profileImg/default_profile.png";
+				profileImg.className = "chat_profile";*/
+
+				const senderSpan = document.createElement("span");
+				senderSpan.className = "chat_sender";
+				senderSpan.textContent = message.sender;
+
+				// infoDiv.appendChild(profileImg);
+				infoDiv.appendChild(senderSpan);
+
+				const contentDiv = document.createElement("div");
+				contentDiv.className = "chat_bubble";
+				contentDiv.textContent = message.content;
+
+				messageContainer.appendChild(infoDiv);
+				messageContainer.appendChild(contentDiv);
+				box.appendChild(messageContainer);
+				box.scrollTop = box.scrollHeight;
+			}
+		</script>
+	</div>
+</body>
+
+</html>

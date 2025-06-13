@@ -5,7 +5,7 @@
 <head>
 	<title layout:title="회원가입">회원가입</title>
 	<link rel="stylesheet" th:href="@{/css/user/sign_form.css}" />
-	<script th:src="@{/javascript/signup.js}" defer></script>
+	<script th:src="@{/javascript/user/signup.js}" defer></script>
 </head>
 
 <body>
@@ -23,8 +23,8 @@
 				<p class="caution email_caution">이메일 형식이 올바르지 않습니다.</p>
 
 				<label for="user_password" class="signup_label">비밀번호</label>
-				<p class="shown_caution">
-					비밀번호는 8~20자 영문, 숫자, 특수문자로 입력하세요.
+				<p class="shown_caution password_regex_caution">
+					비밀번호는 8~20자 영문, 숫자, 특수문자로 입력해주세요.
 				</p>
 				<input type="password" placeholder="비밀번호 입력" class="login_input input_password"
 					th:field="*{userPassword}" />
@@ -32,7 +32,7 @@
 					th:field="*{userCheckPassword}" />
 				<p class="caution password_caution">비밀번호가 서로 다릅니다.</p>
 
-				<button class="next_btn">다음</button>
+				<button class="next_btn" disabled>회원가입</button>
 
 				<p class="signup">
 					이미 가입하셨나요?

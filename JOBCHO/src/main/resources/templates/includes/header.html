@@ -10,10 +10,7 @@
 		<div sec:authorize="isAuthenticated()" class="isLogin">
 			<div class="login_profile">
 				<th:block th:if="${user != null}">
-					<div th:if="${user.userImg == null and user.isAdmin != 1}">
-						<img th:src="@{/images/profileImg/default_profile.png}" alt="profile_img" />
-					</div>
-					<div th:if="${user.userImg != null and user.isAdmin != 1}">
+					<div th:if="${user.isAdmin != 1}">
 						<img th:src="@{/uploads/profileImg/{img}(img=${user.userImg})}" alt="profile_img" />
 					</div>
 					<div th:if="${user.isAdmin != 0}">

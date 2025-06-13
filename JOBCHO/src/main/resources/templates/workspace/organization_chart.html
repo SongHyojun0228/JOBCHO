@@ -22,10 +22,13 @@
 							alt="default_profile_img" />
 					</div>
 					<div th:if="${member.userImg != null} and ${member.isAdmin != 1}">
-						<img th:src="@{'/images/profileImg/' + ${member.userImg}}" class="profile_img"
-							alt="profile_img" />
+						<img th:src="@{/uploads/profileImg/{img}(img=${member.userImg})}" class="profile_img"
+							alt="profile_img">
 					</div>
 					<p class="member_name" th:text="${member.userName}"></p>
+					<div th:if="${member.isActive == 1}" class="is_active">
+						<img th:src="@{/images/icons/is_active.png}">
+					</div>
 				</div>
 			</div>
 		</div>
