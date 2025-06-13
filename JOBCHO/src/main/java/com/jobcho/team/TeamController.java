@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jobcho.workspace.WorkspaceService;
-import com.jobcho.workspace.Workspaces;
 
 import lombok.RequiredArgsConstructor;
 
@@ -186,8 +185,6 @@ public class TeamController {
 		return "redirect:/";
 	}
 	
-	
-	//정확하게는 알지 못함
 	@GetMapping("/{workspaceId}/icon")
 	@ResponseBody
 	public ResponseEntity<Resource> getTeamIcon(@PathVariable("workspaceId") Integer workspaceId) throws IOException {

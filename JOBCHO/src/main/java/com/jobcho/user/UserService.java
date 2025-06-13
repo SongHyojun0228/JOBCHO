@@ -70,5 +70,9 @@ public class UserService {
 	public boolean checkPassword(Users user, String inputPassword) {
 		return passwordEncoder.matches(inputPassword, user.getUserPassword());
 	}
+	
+	public Users findById(Integer id) {
+		return userRepository.findById(id).orElse(null);
+	}
 
 }
