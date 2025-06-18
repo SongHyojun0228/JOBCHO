@@ -41,6 +41,7 @@ public class TaskService {
 
 		taskRepository.save(task);
 
+		// 알람 생성
 		List<ChatroomMember> members = chatroomMemberRepository.findByChatroom_ChatroomId(dto.getChatroomId());
 		for (ChatroomMember member : members) {
 			Users user = member.getUser();

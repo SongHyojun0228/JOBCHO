@@ -1,5 +1,10 @@
 package com.jobcho.bookmark;
 
+import com.jobcho.chatroom.Chatrooms;
+import com.jobcho.message.Messages;
+import com.jobcho.mychatroom.MyChatroom;
+import com.jobcho.notification.Notifications;
+import com.jobcho.task.Tasks;
 import com.jobcho.user.Users;
 
 import jakarta.persistence.Column;
@@ -17,34 +22,54 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Bookmarks {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_bookmark")
 	@SequenceGenerator(name = "seq_bookmark", sequenceName = "SEQ_BOOKMARK", allocationSize = 1)
 	private Integer bookmarkId;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "user_id")  
+	@JoinColumn(name = "user_id")
 	private Users user;
-	
-	@Column
-	private Integer messageId;
-	
-	@Column
-	private Integer notificationId;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "message_id")
+	private Messages message;
+
+	@ManyToOne
+	@JoinColumn(name = "notification_id")
+	private Notifications notification;
+
 	@Column
 	private Integer voteId;
-	
-	@Column
-	private Integer taskId;
-	
-	@Column
-	private Integer chatroomId;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "task_id")
+	private Tasks task;
+
+	@ManyToOne
+	@JoinColumn(name = "chatroom_id")
+	private Chatrooms chatroom;
+
 	@Column
 	private Integer fileId;
+
+	@ManyToOne
+	@JoinColumn(name = "my_chatroom_id")
+	private MyChatroom myChatroom;
+
 	
-	@Column
-	private Integer myChatroomId;
 	
+	public Integer getChatroomId() {
+		return (chatroom != null) ? chatroom.getChatroomId() : null;
+	}
+
+	public Integer getMyChatroomId() {
+		return (myChatroom != null) ? myChatroom.getMyChatroomId() : null;
+	}
+
+	public Integer getMessageId() {
+		return (message != null) ? message.getMessageId() : null;
+	}
+
 }

@@ -97,4 +97,9 @@ public class WorkspaceService {
 		return workspcace.getWorkspaceName();
 	}
 
+	public Workspaces getByFolderId(Integer folderId) {
+		Folders _folder = this.folderRepository.getById(folderId);
+		return workspaceRepository.getById(_folder.getWorkspaceId());
+	}
+
 }

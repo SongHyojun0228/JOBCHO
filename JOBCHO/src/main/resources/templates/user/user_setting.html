@@ -74,8 +74,7 @@
 						<p class="caution_notice">이메일 변경 시, 다시 로그인해주세요.</p>
 						<input type="email" class="email_input" name="new_user_email"
 							th:placeholder="${user.userEmail}" />
-						<div class="email_caution caution" style="display: none;"></div>
-
+						<p class="caution email_caution">이메일 형식이 올바르지 않습니다.</p>
 						<div class="change_btns">
 							<button type="button" class="cancel_btn">취소</button>
 							<button class="confirm_btn">확인</button>
@@ -91,9 +90,9 @@
 					<p class="user_info">*******</p>
 					<form th:action="@{/user/userpassword/change}" class="change_form" method="post">
 						<p class="caution_notice">비밀번호 변경 시, 다시 로그인해주세요.</p>
-						<input type="password" class="pw_input" placeholder="현재 비밀번호" name="user_password" />
+						<input type="password" class="curr_pw_input" placeholder="현재 비밀번호" name="user_password" />
 						<input type="password" class="new_pw_input" placeholder="변경할 비밀번호" name="new_user_password" />
-						<div class="pw_caution caution" style="display: none;"></div>
+						<p class="caution pw_caution"> 비밀번호는 8~20자 영문, 숫자, 특수문자로 입력해주세요.</p>
 						<div class="change_btns">
 							<button type="button" class="cancel_btn">취소</button>
 							<button type="submit" class="confirm_btn">확인</button>
@@ -111,7 +110,7 @@
 							<input type="hidden" value="dummy" />
 							<p class="last_confirm">잔디 계정을 삭제하시겠습니까?</p>
 							<button type="button" class="cancel_btn">취소</button>
-							<button class="confirm_btn delete_btn">잔디 계정을 삭제</button>
+							<button class="delete_btn">잔디 계정을 삭제</button>
 						</div>
 					</form>
 				</div>

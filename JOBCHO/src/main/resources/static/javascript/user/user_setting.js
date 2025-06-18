@@ -55,10 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		const cancelBtn = changeForm.querySelector(".cancel_btn");
 		const inputs = changeForm.querySelectorAll("input");
 
-		// 🌿 초기 버튼 상태
-		confirmBtn.style.backgroundColor = "rgb(169, 169, 169)";
-		confirmBtn.style.borderColor = "rgb(169, 169, 169)";
-
 		// 🌿 토글 클릭시 폼 열고 닫기
 		item.addEventListener("click", () => {
 			if (changeForm.style.display === "block") return;
@@ -162,18 +158,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			const currPwInputVal = currentPwInput.value.trim();
 			const newPwInputVal = newPwInput.value.trim();
-			const pwCaution = item.querySelector(".pw_caution");
+			const pwCaution = document.querySelector(".pw_caution");
 
-			if (currPwInputVal.length > 0 && newPwInputVal.length > 0
-				&& pwRegex.test(currPwInputVal) && pwRegex.test(newPwInputVal)) {
+			if (currPwInputVal.length > 0 && newPwInputVal.length > 0 && pwRegex.test(newPwInputVal)) {
+				console.log("양식 통과");
 				confirmBtn.disabled = false;
 				pwCaution.style.display = "none";
+				console.log(pwCaution.style.display);
 				confirmBtn.style.backgroundColor = "rgb(6, 195, 115)";
 				confirmBtn.style.borderColor = "rgb(6, 195, 115)"
 			}
-			else {
+			else  {
+				console.log("양식 불통과");
+				console.log("currPW : " + currPwInputVal);
+				console.log("newPW : " + newPwInputVal);
 				confirmBtn.disabled = true;
 				pwCaution.style.display = "block";
+				pwCaution.textContent = " 비밀번호는 영문, 숫자, 특수문자로 이뤄진 8~20자 입니다."
 				confirmBtn.style.backgroundColor = "rgb(169, 169, 169)";
 				confirmBtn.style.borderColor = "rgb(169, 169, 169)";
 			}
@@ -181,6 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	document.querySelector(".change_form").addEventListener("submit", function(e) {
-		console.log("🔥 폼 제출됨");
+		console.log("폼 제출됨");
 	});
 });

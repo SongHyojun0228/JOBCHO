@@ -25,7 +25,7 @@
 .talk_header {
 	display: flex;
 	align-items: center;
-	padding: 0.8rem 2rem;
+	padding: 0.8rem 1rem;
 	height: 4rem;
 	border-bottom: 1px solid rgb(169, 169, 169);
 }
@@ -79,35 +79,81 @@
 	height: 30rem;
 	padding-bottom: 1.7rem;
 	overflow: scroll;
+	padding: 1.5rem 1rem;
+	padding-top: 0;
 }
 
 .chat_message {
-	padding-inline: 1rem;
 	margin-top: 1.5rem;
 }
 
-.chat_user_info {
+.mine_chat_user_info {
 	font-weight: 400;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.9rem;
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.partner_chat_user_info {
+	font-weight: 400;
+	margin-bottom: 0.9rem;
+	display: flex;
+	align-items: flex-end;
+	gap: 0.5rem;
+}
+
+
+.mine_chat_sender_profile,
+.partner_chat_sender_profile {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 30%;
 }
 
 .chat_sender {
 	font-size: 0.9rem;
-} 
+}
 
 .chat_bubble {
 	display: inline;
 	padding: 0.5rem;
-	background-color: rgb(228, 228, 228);
+	background-color: rgba(79, 130, 252, 0.5);
 	border-radius: 6px;
+	text-align: right;
 }
 
 .mine_chat {
 	text-align: right;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end
 }
 
-.mine_chat .chat_bubble {
-	background-color: rgba(79, 130, 252, 0.5);
+.mine_chat .mine_chat_bubble,
+.partner_chat .partner_chat_bubble {
+	display: inline-block;
+	padding: 0.5rem;
+	border-radius: 6px;
+	background-color: rgba(79, 130, 252);
+	color: rgb(250, 250, 250);
+	font-weight: 400;
+	word-wrap: break-word;
+	max-width: 100%;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+	text-align: left;
+}
+
+
+.partner_chat {
+	text-align: left;
+}
+
+.partner_chat .partner_chat_bubble {
+	background-color: rgb(125, 125, 125);
+	color: rgb(250, 250, 250);
 }
 
 .talk_input {

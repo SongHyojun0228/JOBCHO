@@ -12,11 +12,28 @@ public class WebConfig implements WebMvcConfigurer {
 	@Value("${file.upload-dir}")
 	private String uploadDir;
 
+	@Value("${file.file-upload-dir}")
+	private String uploadDir2;
+
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		String uploadPath = new File(uploadDir).getAbsolutePath();
+//		registry.addResourceHandler("/uploads/profileImg/**").addResourceLocations("file:" + uploadPath + "/");
+//
+//		System.out.println("파일 저장 경로(절대경로): " + uploadPath);
+//	}
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		String uploadPath = new File(uploadDir).getAbsolutePath();
-		registry.addResourceHandler("/uploads/profileImg/**").addResourceLocations("file:" + uploadPath + "/");
+		// 프로필 이미지
+		String profileUploadPath = new File(uploadDir).getAbsolutePath();
+		registry.addResourceHandler("/uploads/profileImg/**").addResourceLocations("file:" + profileUploadPath + "/");
 
-		System.out.println("파일 저장 경로(절대경로): " + uploadPath);
+		// 일반 파일
+		String fileUploadPath = new File(uploadDir2).getAbsolutePath();
+		registry.addResourceHandler("/uploads/files/**").addResourceLocations("file:" + fileUploadPath + "/");
+
+		System.out.println("프로필 저장 경로: " + profileUploadPath);
+		System.out.println("파일 저장 경로: " + fileUploadPath);
 	}
 }

@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", function() {
 		members.forEach(member => {
 			const name = member.querySelector(".member_name").textContent.toLowerCase();
 			if (name.includes(keyword)) {
-				member.style.display = "flex";  // 보여줌
+				member.style.display = "flex";
 			} else {
-				member.style.display = "none";  // 숨김
+				member.style.display = "none";
 			}
 		});
 	});

@@ -18,6 +18,7 @@ public class CSService {
 
 	private final CSRepository csRepository;
 	private final UserRepository userRepository;
+	private final CsChatroomRepository csChatroomRepository;
 
     // 🌿 1:1 고객센터 채팅 생성 메서드
 	public void create(CsChatMessage msg) {
@@ -25,8 +26,10 @@ public class CSService {
 			Optional<Users> _sender = this.userRepository.findById(msg.getSenderId());
 			Users sender = _sender.get();
 			
+			Optional<CsChatroom> _csChatroom = this.csChatroomRepository.findById(msg.getCsChatroomId());
+			
 			CS cs = new CS();
-			cs.setCsChatroomId(msg.getCsChatroomId());
+			cs.setCsChatroom(_csChatroom.get());
 			System.out.println("<<< CSRepository.create >>> : " + msg.getCsChatroomId());
 			cs.setSender(sender);
 			cs.setContent(msg.getContent());
@@ -55,4 +58,13 @@ public class CSService {
 		return csMessages;
 	}
 	
+	// 🌿 고객센터 채팅방 채팅 읽음 처리 메서드
+	public void markMessagesAsRead(Integer csChatroomId, Integer userId) {
+        csRepository.markAsReadByChatroomId(csChatroomId, userId);
+    }
+	
+	// 🌿 고객센터 1 : 1 마지막 채팅 내용
+	public List<CS> findLatestMessagesPerChatroom() {
+	    return csRepository.findLatestMessagesPerChatroom();
+	}
 }
