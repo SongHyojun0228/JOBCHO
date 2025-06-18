@@ -29,8 +29,10 @@
 							</svg>
 							<span>국가 공휴일 및 기념일</span>
 						</span>
+						<!--
 						<img th:src="@{/images/icons/three_dots.png}" alt="menu" class="three-dots" />
 						<div th:replace="function/color_popup :: colorPopup"></div>
+						-->
 					</span>
 					<!-- 수정한 부분 -->
 					<span class="user-schedule" style="position: relative;" th:attr="data-username=${user.userName}">
@@ -41,9 +43,32 @@
 							</svg>
 							<span th:text="${user.userName}">사용자 이름</span>
 						</span>
+						<!--
 						<img th:src="@{/images/icons/three_dots.png}" alt="menu" class="three-dots" />
 						<div th:replace="function/color_popup :: colorPopup"></div>
+						-->
 					</span>
+
+					<th:block th:each="ws : ${workspaces}">
+						<span class="workspace-toggle" style="position: relative;"
+							th:data-workspace-id="${ws.workspaceId}" th:data-visible="${ws.visible}"
+							th:data-color="${ws.color}" th:classappend="${ws.visible == 'Y'} ? ' active' : ''">
+
+							<span class="icon-text">
+								<svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+									width="16" height="16" fill="currentColor">
+									<path
+										d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z" />
+								</svg>
+								<span th:text="${ws.workspaceName}">워크스페이스 이름</span>
+							</span>
+
+							<img th:src="@{/images/icons/three_dots.png}" alt="menu" class="three-dots" />
+
+							<div th:replace="~{function/color_popup :: colorPopup(${ws.color})}"></div>
+						</span>
+					</th:block>
+
 				</div>
 			</div>
 			<button id="sidebarToggle" class="sidebar-toggle-btn">접기</button>

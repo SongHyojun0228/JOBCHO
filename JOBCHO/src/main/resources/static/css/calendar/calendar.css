@@ -216,8 +216,16 @@ body {
 	opacity: 1;
 }
 
+.workspace-toggle .calendar-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  color: #facc15;
+}
+
 .holiday-toggle,
-.user-schedule {
+.user-schedule,
+.workspace-toggle {
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -230,12 +238,14 @@ body {
 }
 
 .holiday-toggle:hover,
-.user-schedule:hover {
+.user-schedule:hover,
+.workspace-toggle:hover {
 	background-color: #f1f3f5;
 }
 
 .holiday-toggle .three-dots,
-.user-schedule .three-dots {
+.user-schedule .three-dots,
+.workspace-toggle .three-dots {
 	position: absolute;
 	right: 12px;
 	width: 18px;
@@ -245,16 +255,38 @@ body {
 }
 
 .holiday-toggle:hover .three-dots,
-.user-schedule:hover .three-dots {
+.user-schedule:hover .three-dots,
+.workspace-toggle:hover .three-dots {
 	opacity: 1;
 }
 
 .holiday-toggle svg,
 .holiday-toggle span,
 .user-schedule svg,
-.user-schedule span {
+.user-schedule span,
+.workspace-toggle svg,
+.workspace-toggle span {
 	vertical-align: middle;
 }
+
+/*
+.holiday-toggle .icon-text span,
+.user-schedule .icon-text span,
+.workspace-toggle .icon-text span {
+  display: inline-block;
+  width: 15ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.holiday-toggle .icon-text svg,
+.user-schedule .icon-text svg,
+.workspace-toggle .icon-text svg {
+  margin-right: 0.5rem;
+}
+*/
 
 .sidebar-toggle-btn {
 	position: absolute;
