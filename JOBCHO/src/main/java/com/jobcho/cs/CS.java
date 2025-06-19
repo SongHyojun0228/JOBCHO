@@ -57,7 +57,8 @@ public class CS {
 	@ColumnDefault("0")
 	private Integer isDeleted;
 	
-	@Column
-	private Integer csChatroomId;
+	@ManyToOne
+	@JoinColumn(name = "cs_chatroom_id")
+	private CsChatroom csChatroom;
 
 }

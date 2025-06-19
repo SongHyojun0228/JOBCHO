@@ -20,7 +20,7 @@ public class ChatroomMemberService {
 	private final ChatroomMemberRepository chatroomMemberRepository;
 	private final ChatroomRepository chatroomRepository;
 
-    // 🌿 채팅방 멤버 추가하기 메서드
+	// 🌿 채팅방 멤버 추가하기 메서드
 	public void addMember(Integer chatroomId, String email) {
 		Optional<Chatrooms> _chatroom = this.chatroomRepository.findById(chatroomId);
 		Chatrooms chatroom = _chatroom.get();
@@ -39,12 +39,17 @@ public class ChatroomMemberService {
 		}
 	}
 
-    // 🌿 채팅방아이디로 해당 채팅방 멤버 불러오기 메서드
+	// 🌿 채팅방아이디로 해당 채팅방 멤버 불러오기 메서드
 	public List<ChatroomMember> getChatroomMembersByChatroomId(Integer id) {
 		System.out.println("Chatroom ID: " + id);
-	    List<ChatroomMember> members = this.chatroomMemberRepository.findByChatroom_ChatroomId(id);
-	    System.out.println("Members found: " + members.size());
-	    return members;
+		List<ChatroomMember> members = this.chatroomMemberRepository.findByChatroom_ChatroomId(id);
+		System.out.println("Members found: " + members.size());
+		return members;
+	}
+
+	// 🌿 해당 워크스페이스에 해당하는 유저 찾기 메서드
+	public List<Users> findUsersByChatroomId(Integer workspaceId) {
+		return chatroomMemberRepository.findUsersByWorkspaceId(workspaceId);
 	}
 
 }

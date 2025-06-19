@@ -102,4 +102,9 @@ public class WorkspaceService {
 			.orElseThrow(() -> new RuntimeException("해당 워크스페이스가 없습니다."));
 	}
 
+	public Workspaces getByFolderId(Integer folderId) {
+		Folders _folder = this.folderRepository.getById(folderId);
+		return workspaceRepository.getById(_folder.getWorkspaceId());
+	}
+
 }

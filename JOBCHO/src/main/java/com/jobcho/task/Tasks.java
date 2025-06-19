@@ -2,6 +2,7 @@ package com.jobcho.task;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jobcho.chatroom.Chatrooms;
 import com.jobcho.user.Users;
 
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tasks {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_task")

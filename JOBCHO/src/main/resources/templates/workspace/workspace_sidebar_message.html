@@ -24,7 +24,7 @@
 			<div class="message_profile">
 				<img th:src="@{/images/profileImg/default_profile.png}" alt="profile_img" />
 				<div class="profile_info">
-					<p th:text="${searchMessage.senderId}">사용자 이름</p>
+					<p th:text="${searchMessage.sender.userName}">사용자 이름</p>
 					<p th:text="${searchMessage.createdDate}">2025/06/10</p>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 				<p th:text="${searchMessage.content}"></p>
 			</div>
 		</div>
-		<div class="answer_box">
+		<div class="answer_box" id="answer_box">
 			<div class="answer_header">
 				<p>댓글</p>
 				<p>0</p>
@@ -46,7 +46,7 @@
 					<div class="message_profile">
 						<img th:src="@{/images/profileImg/default_profile.png}" alt="profile_img" />
 						<div class="profile_info">
-							<p th:text="${replie.senderId}">사용자 이름</p>
+							<p th:text="${replie.sender.userName}">사용자 이름</p>
 							<p th:text="${replie.createdDate}">2025/06/10</p>
 						</div>
 					</div>
@@ -67,11 +67,7 @@
 				</div>
 			</form>
 		</div>
-
-
 	</div>
-
-</div>
 </div>
 
 </html>

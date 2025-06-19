@@ -46,6 +46,7 @@ textarea::placeholder {
 
 header {
 	width: 100%;
+	min-width: 50rem;
 	background-color: rgb(255, 255, 255);
 	border-bottom: 1.5px solid rgb(228, 228, 227);
 	display: flex;

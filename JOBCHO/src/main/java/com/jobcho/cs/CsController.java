@@ -43,6 +43,8 @@ public class CsController {
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
 		
+	    this.csService.markMessagesAsRead(csChatroomId, user.getUserId());
+
 		List<CS> messages = this.csService.getCsMessage(csChatroomId);
 
 		model.addAttribute("user", user);
@@ -67,7 +69,7 @@ public class CsController {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 }

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,8 +56,9 @@ public class MemberController {
 	}
 
     // 🌿 이메일로 워크스페이스 초대 페이지 GET
-	@GetMapping("/workspace/invite")
-	public String getInviteMember() {
+	@GetMapping("/{workspaceId}/invite")
+	public String getInviteMember(@PathVariable("workspaceId") Integer workspaceId, Model model) {
+		model.addAttribute(workspaceId);
 		return "workspace/invite_member";
 	}
 

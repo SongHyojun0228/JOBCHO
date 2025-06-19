@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +24,7 @@ import com.jobcho.bookmark.BookmarkService;
 import com.jobcho.bookmark.Bookmarks;
 import com.jobcho.chatroom.ChatroomService;
 import com.jobcho.chatroom.Chatrooms;
+import com.jobcho.chatroom_member.ChatroomMemberService;
 import com.jobcho.folder.FolderService;
 import com.jobcho.folder.Folders;
 import com.jobcho.member.MemberService;
@@ -38,6 +38,7 @@ import com.jobcho.notification.Notifications;
 import com.jobcho.task.TaskDto;
 import com.jobcho.task.TaskService;
 import com.jobcho.task.Tasks;
+import com.jobcho.user.UserRepository;
 import com.jobcho.user.UserService;
 import com.jobcho.user.Users;
 
@@ -53,10 +54,12 @@ public class WorkspaceSideBarController {
 	private final WorkspaceService workspaceService;
 	private final TaskService taskService;
 	private final UserService userService;
+	private final UserRepository userRepository;
 	private final MemberService memberService;
+	private final ChatroomMemberService chatroomMemberService;
 	private final MessageService messageService;
-	private final AlarmRepository alarmRepository;
 	private final AlarmService alarmService;
+	private final AlarmRepository alarmRepository;
 	private final MyChatroomService myChatroomService;
 	private final ChatroomService chatroomService;
 
@@ -66,25 +69,27 @@ public class WorkspaceSideBarController {
 	public String workspaceMain_SidebarTask(@PathVariable("workspaceId") int workspaceId,
 			@PathVariable("chatroomId") int chatroomId, @PathVariable("taskId") int taskId, Model model,
 			Principal principal) {
-		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
+		Optional<Users> _user = this.userService.getUser(principal.getName());
+		Users user = _user.get();
+		List<Users> members = this.memberService.findUsersByWorkspaceId(workspaceId);
+		List<Users> chatroomMembers = this.chatroomMemberService.findUsersByChatroomId(chatroomId);
+
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Tasks> tasks = workspaceService.getTask(chatroomId);
 		List<Notifications> notifications = workspaceService.getNotifi(chatroomId);
-		List<Messages> messages = messageService.getMessage(chatroomId);
-		Optional<Users> _user = this.userService.getUser(principal.getName());
-		Users user = _user.get();
+		List<Messages> messages = messageService.getTopLevelMessagesWithReplies(chatroomId);
 		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
-		Set<Integer> bookmarkedChatroomIds = bookmarks.stream().map(Bookmarks::getChatroomId)
-				.collect(Collectors.toSet());
-		Set<Integer> bookmarkedMyChatroomIds = bookmarks.stream().map(Bookmarks::getMyChatroomId)
-				.collect(Collectors.toSet());
-		Set<Integer> bookmarkedMessageIds = bookmarks.stream().map(Bookmarks::getMessageId).collect(Collectors.toSet());
+		Set<Integer> bookmarkedChatroomIds = bookmarkService.extractChatroomBookmarkIds(bookmarks);
+		Set<Integer> bookmarkedMyChatroomIds = bookmarkService.extractMyChatroomBookmarkIds(bookmarks);
+		Set<Integer> bookmarkedMessageIds = bookmarkService.extractMessageBookmarkIds(bookmarks);
+
 		Chatrooms chatrooms = this.workspaceService.getChatroomWithChatId(chatroomId);
 		Tasks tasksDetail = this.workspaceService.getTaskWithTaskId(taskId);
 		MyChatroom mychat = myChatroomService.findMychatByUserID(user.getUserId());
 
 		model.addAttribute("user", user);
 		model.addAttribute("members", members);
+		model.addAttribute("chatroomMembers", chatroomMembers);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("folders", folders);
 		model.addAttribute("chatroomId", chatroomId);
@@ -98,7 +103,7 @@ public class WorkspaceSideBarController {
 		model.addAttribute("bookmarkedMyChatroomIds", bookmarkedMyChatroomIds);
 		model.addAttribute("bookmarkedMessageIds", bookmarkedMessageIds);
 		model.addAttribute("mychat", mychat);
-		
+
 		return "workspace/workspace_sidebar_taskDetail";
 	}
 
@@ -106,24 +111,26 @@ public class WorkspaceSideBarController {
 	@GetMapping("/workspace/{workspaceId}/{chatroomId}/side/modifyChat")
 	public String workspaceMain_SidebarChange(@PathVariable("workspaceId") int workspaceId,
 			@PathVariable("chatroomId") int chatroomId, Model model, Principal principal) {
+		Optional<Users> _user = this.userService.getUser(principal.getName());
+		Users user = _user.get();
+		List<Users> members = this.memberService.findUsersByWorkspaceId(workspaceId);
+		List<Users> chatroomMembers = this.chatroomMemberService.findUsersByChatroomId(chatroomId);
+
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Tasks> tasks = workspaceService.getTask(chatroomId);
 		List<Notifications> notifications = workspaceService.getNotifi(chatroomId);
-		List<Messages> messages = messageService.getMessage(chatroomId);
-		Chatrooms chatrooms = this.workspaceService.getChatroomWithChatId(chatroomId);
-		Optional<Users> _user = this.userService.getUser(principal.getName());
-		Users user = _user.get();
-		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
+		List<Messages> messages = messageService.getTopLevelMessagesWithReplies(chatroomId);
 		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
-		Set<Integer> bookmarkedChatroomIds = bookmarks.stream().map(Bookmarks::getChatroomId)
-				.collect(Collectors.toSet());
-		Set<Integer> bookmarkedMyChatroomIds = bookmarks.stream().map(Bookmarks::getMyChatroomId)
-				.collect(Collectors.toSet());
-		Set<Integer> bookmarkedMessageIds = bookmarks.stream().map(Bookmarks::getMessageId).collect(Collectors.toSet());
+		Set<Integer> bookmarkedChatroomIds = bookmarkService.extractChatroomBookmarkIds(bookmarks);
+		Set<Integer> bookmarkedMyChatroomIds = bookmarkService.extractMyChatroomBookmarkIds(bookmarks);
+		Set<Integer> bookmarkedMessageIds = bookmarkService.extractMessageBookmarkIds(bookmarks);
+
+		Chatrooms chatrooms = this.workspaceService.getChatroomWithChatId(chatroomId);
 		MyChatroom mychat = myChatroomService.findMychatByUserID(user.getUserId());
-		
+
 		model.addAttribute("user", user);
 		model.addAttribute("members", members);
+		model.addAttribute("chatroomMembers", chatroomMembers);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("folders", folders);
 		model.addAttribute("chatroomId", chatroomId);
@@ -136,7 +143,7 @@ public class WorkspaceSideBarController {
 		model.addAttribute("bookmarkedMessageIds", bookmarkedMessageIds);
 		model.addAttribute("messages", messages);
 		model.addAttribute("mychat", mychat);
-		
+
 		return "workspace/workspace_sidebar_modifychat";
 	}
 
@@ -145,26 +152,29 @@ public class WorkspaceSideBarController {
 	public String workspaceMain_SidebarMessage(@PathVariable("workspaceId") int workspaceId,
 			@PathVariable("chatroomId") int chatroomId, @PathVariable("messageId") int messageId, Model model,
 			Principal principal) {
-		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
+		Optional<Users> _user = this.userService.getUser(principal.getName());
+		Users user = _user.get();
+		List<Users> members = this.memberService.findUsersByWorkspaceId(workspaceId);
+		List<Users> chatroomMembers = this.chatroomMemberService.findUsersByChatroomId(chatroomId);
+
 		List<Folders> folders = workspaceService.getFolderWithChatrooms(workspaceId);
 		List<Tasks> tasks = workspaceService.getTask(chatroomId);
 		List<Notifications> notifications = workspaceService.getNotifi(chatroomId);
-		List<Messages> messages = messageService.getMessage(chatroomId);
+		List<Messages> messages = messageService.getTopLevelMessagesWithReplies(chatroomId);
+		List<Messages> replies = messageService.getReplies(messageId);
+		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
+
+		Set<Integer> bookmarkedChatroomIds = bookmarkService.extractChatroomBookmarkIds(bookmarks);
+		Set<Integer> bookmarkedMyChatroomIds = bookmarkService.extractMyChatroomBookmarkIds(bookmarks);
+		Set<Integer> bookmarkedMessageIds = bookmarkService.extractMessageBookmarkIds(bookmarks);
+
 		Chatrooms chatrooms = this.workspaceService.getChatroomWithChatId(chatroomId);
 		Messages searchMessage = messageService.getMessageWithMessageId(messageId);
-		List<Messages> replies = messageService.getReplies(messageId);
-		Optional<Users> _user = this.userService.getUser(principal.getName());
-		Users user = _user.get();
-		List<Bookmarks> bookmarks = bookmarkService.getBookmarksByUserId(user.getUserId());
-		Set<Integer> bookmarkedChatroomIds = bookmarks.stream().map(Bookmarks::getChatroomId)
-				.collect(Collectors.toSet());
-		Set<Integer> bookmarkedMyChatroomIds = bookmarks.stream().map(Bookmarks::getMyChatroomId)
-				.collect(Collectors.toSet());
-		Set<Integer> bookmarkedMessageIds = bookmarks.stream().map(Bookmarks::getMessageId).collect(Collectors.toSet());
 		MyChatroom mychat = myChatroomService.findMychatByUserID(user.getUserId());
 
 		model.addAttribute("user", user);
 		model.addAttribute("members", members);
+		model.addAttribute("chatroomMembers", chatroomMembers);
 		model.addAttribute("workspaceId", workspaceId);
 		model.addAttribute("folders", folders);
 		model.addAttribute("chatroomId", chatroomId);
@@ -179,7 +189,7 @@ public class WorkspaceSideBarController {
 		model.addAttribute("searchMessage", searchMessage);
 		model.addAttribute("replies", replies);
 		model.addAttribute("mychat", mychat);
-		
+
 		return "workspace/workspace_sidebar_message";
 	}
 
@@ -271,9 +281,9 @@ public class WorkspaceSideBarController {
 	public Map<String, Object> bookmarkCreate(@RequestBody Map<String, String> payload, Principal principal) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			String type = payload.get("type");
-			int targetId = Integer.parseInt(payload.get("targetId"));
-			String action = payload.get("action");
+			String type = payload.get("type"); // chatroom? messages? etc
+			int targetId = Integer.parseInt(payload.get("targetId")); // date-set-?-id
+			String action = payload.get("action"); // isAdding ? 'ADD' : 'REMOVE'
 
 			Optional<Users> _user = this.userService.getUser(principal.getName());
 			Users user = _user.get();
@@ -295,32 +305,47 @@ public class WorkspaceSideBarController {
 	}
 
 	// 🌿 조직도 GET
-	@GetMapping("workspace/organization")
-	public String getOrganizationChar(Principal principal, Model model) {
-		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
-		model.addAttribute("members", members);
-
-		Optional<Users> _user = this.userService.getUser(principal.getName());
-		Users user = _user.get();
-
-		model.addAttribute("user", user);
-
-		System.out.println("member.size() : " + members.size());
-		return "workspace/organization_chart";
-	}
+//	@GetMapping("workspace/organization")
+//	public String getOrganizationChar(Principal principal, Model model) {
+//		List<Users> members = this.memberService.findUsersByWorkspaceId(workspaceId);
+//		model.addAttribute("members", members);
+//
+//		Optional<Users> _user = this.userService.getUser(principal.getName());
+//		Users user = _user.get();
+//
+//		model.addAttribute("user", user);
+//
+//		System.out.println("member.size() : " + members.size());
+//		return "workspace/organization_chart";
+//	}
 
 	// 🌿 알람 사이드바 GET
 	@GetMapping("/{workspaceId}/alarm")
 	public String getAlarm(@PathVariable("workspaceId") int workspaceId, Principal principal, Model model) {
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
+		List<Alarms> alarmList = alarmService.getAlarmsByWorkspaceId(user.getUserId(), workspaceId);
+
+		Integer maxAlarmId = alarmList.stream().map(Alarms::getAlarmId).max(Integer::compareTo).orElse(0);
 
 		model.addAttribute("user", user);
-
-		List<Alarms> alarmList = alarmService.getAlarmsByWorkspaceId(user.getUserId(), workspaceId);
+		model.addAttribute("lastAlarmId", maxAlarmId);
 		model.addAttribute("alarmList", alarmList);
+		model.addAttribute("workspaceId", workspaceId);
+
+		this.alarmService.markAsRead(user.getUserId());
 
 		return "workspace/side_alarm";
 	}
 
+	@GetMapping("/{workspaceId}/alarm/list")
+	public String getAlarmList(@PathVariable("workspaceId") int workspaceId, Model model, Principal principal) {
+		Optional<Users> _user = this.userService.getUser(principal.getName());
+		Users user = _user.get();
+
+		List<Alarms> alarmList = alarmService.getAlarmsByWorkspaceId(user.getUserId(), workspaceId);
+		model.addAttribute("alarmList", alarmList);
+
+		return "workspace/side_alarm :: alarmListFragment";
+	}
 }

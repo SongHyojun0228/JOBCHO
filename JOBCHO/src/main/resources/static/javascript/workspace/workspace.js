@@ -119,15 +119,15 @@ if (noticeLink != null) {
 }
 
 function openModal(btn) {
-    const index = btn.getAttribute("data-folder-index");
-    const modal = document.getElementById("modal2-" + index);
-    if (modal) {
-        modal.style.display = "block"; 
+	const index = btn.getAttribute("data-folder-index");
+	const modal = document.getElementById("modal2-" + index);
+	if (modal) {
+		modal.style.display = "block";
 		overlay.style.display = 'block';
-    }
+	}
 }
 
-function openSideTask(btn){
+function openSideTask(btn) {
 	const workspaceId = btn.getAttribute("data-workspace-id");
 	const chatroomId = btn.getAttribute("data-chatroom-id");
 	const taskId = btn.getAttribute("data-task-id");
@@ -135,7 +135,7 @@ function openSideTask(btn){
 	window.location.href = url;
 }
 
-function openSideMessage(btn){
+function openSideMessage(btn) {
 	const workspaceId = btn.getAttribute("data-workspace-id");
 	const chatroomId = btn.getAttribute("data-chatroom-id");
 	const messageId = btn.getAttribute("data-message-id");
@@ -143,7 +143,7 @@ function openSideMessage(btn){
 	window.location.href = url;
 }
 
-function showModifyChat(btn){
+function showModifyChat(btn) {
 	const workspaceId = btn.getAttribute("data-workspace-id");
 	const chatroomId = btn.getAttribute("data-chatroom-id");
 	const url = `/workspace/${workspaceId}/${chatroomId}/side/modifyChat`;
@@ -151,19 +151,19 @@ function showModifyChat(btn){
 }
 
 function openChatMenu(index) {
-  const menu = document.getElementById("chatmenu-" + index);
-  if (menu) {
-	menu.style.visibility = 'visible'
-    menu.style.opacity = 1;
-  }
+	const menu = document.getElementById("chatmenu-" + index);
+	if (menu) {
+		menu.style.visibility = 'visible'
+		menu.style.opacity = 1;
+	}
 }
 
 function closeChatMenu(index) {
-  const menu = document.getElementById("chatmenu-" + index);
-  if (menu) {
-	menu.style.visibility = 'none'
-	menu.style.opacity = 0;
-  }
+	const menu = document.getElementById("chatmenu-" + index);
+	if (menu) {
+		menu.style.visibility = 'none'
+		menu.style.opacity = 0;
+	}
 }
 
 //아이콘 메뉴 더보기
@@ -174,19 +174,19 @@ menuLink.addEventListener('click', (e) => {
 document.addEventListener('click', (event) => {
 	const isClickInsideIcon = icon && icon.contains(event.target);
 	const isClickInsidePopup = popup && popup.contains(event.target);
-	const isClickInsideMenuIcon = menuIcon &&menuIcon.contains(event.target);
+	const isClickInsideMenuIcon = menuIcon && menuIcon.contains(event.target);
 	const isClickInsidePopup2 = popup2 && popup2.contains(event.target);
 
 	if (!isClickInsideIcon && !isClickInsidePopup) {
-		if(popup != null){
-		 popup.style.display = 'none';
-		 }
+		if (popup != null) {
+			popup.style.display = 'none';
+		}
 	}
 
 	if (!isClickInsideMenuIcon && !isClickInsidePopup2) {
-		if(popup2 != null){
-		 popup2.style.display = 'none';
-		 }
+		if (popup2 != null) {
+			popup2.style.display = 'none';
+		}
 	}
 });
 
@@ -194,7 +194,7 @@ document.addEventListener('click', (event) => {
 //공지사항 업로드 스크립트 불러옴
 document.addEventListener("DOMContentLoaded", () => {
 	const textArea = document.querySelector(".register_form textarea");
-	if(document.querySelector(".register_form textarea") != null){
+	if (document.querySelector(".register_form textarea") != null) {
 		const originText = document.querySelector(".register_form textarea").value;
 	}
 	const numberOfText = document.querySelector(".numbers_of_text span");
@@ -237,43 +237,43 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function toggleStar(imgElement) {
-    const emptyStar = '/images/icons/empty_star.png';
-    const filledStar = '/images/icons/star.png';
-    const currentSrc = imgElement.getAttribute('src');
+	const emptyStar = '/images/icons/empty_star.png';
+	const filledStar = '/images/icons/star.png';
+	const currentSrc = imgElement.getAttribute('src');
 
-    if (currentSrc.includes('empty_star.png')) {
-        imgElement.setAttribute('src', filledStar);
-    } else {
-        imgElement.setAttribute('src', emptyStar);
-    }
+	if (currentSrc.includes('empty_star.png')) {
+		imgElement.setAttribute('src', filledStar);
+	} else {
+		imgElement.setAttribute('src', emptyStar);
+	}
 }
 
 function toggleStar(imgElement) {
-    const emptyStar = '/images/icons/empty_star.png';
-    const filledStar = '/images/icons/star.png';
+	const emptyStar = '/images/icons/empty_star.png';
+	const filledStar = '/images/icons/star.png';
 
-    const currentSrc = imgElement.getAttribute('src');
-    imgElement.setAttribute('src', currentSrc.includes('empty_star') ? filledStar : emptyStar);
+	const currentSrc = imgElement.getAttribute('src');
+	imgElement.setAttribute('src', currentSrc.includes('empty_star') ? filledStar : emptyStar);
 }
 
 function toggleFolder(folderHeader) {
-    const folderContent = folderHeader.nextElementSibling;
-    if (!folderContent) return;
+	const folderContent = folderHeader.nextElementSibling;
+	if (!folderContent) return;
 
-    const isVisible = folderContent.style.display !== 'none';
-    folderContent.style.display = isVisible ? 'none' : 'block';
+	const isVisible = folderContent.style.display !== 'none';
+	folderContent.style.display = isVisible ? 'none' : 'block';
 
-    const arrowImg = folderHeader.querySelector('.folder_arrow');
-    if (arrowImg) {
-        const downArrow = '/images/icons/arrow-down.png';
-        const rightArrow = '/images/icons/arrow-right.png';
+	const arrowImg = folderHeader.querySelector('.folder_arrow');
+	if (arrowImg) {
+		const downArrow = '/images/icons/arrow-down.png';
+		const rightArrow = '/images/icons/arrow-right.png';
 
-        const currentSrc = arrowImg.getAttribute('src');
-        arrowImg.setAttribute('src', currentSrc.includes('arrow-down') ? rightArrow : downArrow);
-    }
+		const currentSrc = arrowImg.getAttribute('src');
+		arrowImg.setAttribute('src', currentSrc.includes('arrow-down') ? rightArrow : downArrow);
+	}
 }
 
-function shownotifi(btn){
+function shownotifi(btn) {
 	const content = btn.getAttribute('data-notification-content');
 	const textarea = document.getElementById('notification_content');
 	textarea.value = content;
@@ -281,13 +281,13 @@ function shownotifi(btn){
 	modal.style.display = 'block';
 }
 
-function closenotifiCreate(event){
-	event.preventDefault;
-	overlay.style.display = 'block';
-	modal.style.display = 'block';
-}
+document.getElementById('cancel_btn_notificlose').addEventListener('click', function(e) {
+	e.preventDefault();
+	overlay.style.display = 'none';
+	modal.style.display = 'none';
+});
 
-function shownotifiOnMessage(btn){
+function shownotifiOnMessage(btn) {
 	const content = btn.getAttribute('data-message-content');
 	const textarea = document.getElementById('notification_content');
 	textarea.value = content;
@@ -295,7 +295,7 @@ function shownotifiOnMessage(btn){
 	modal.style.display = 'block';
 }
 
-function showMessageEdit(btn){
+function showMessageEdit(btn) {
 	const content = btn.getAttribute('data-message-content');
 	const messageId = btn.getAttribute('data-message-id');
 	const textarea = document.getElementById('message_content');
@@ -307,7 +307,7 @@ function showMessageEdit(btn){
 	modal3.style.display = 'block';
 }
 
-function showTaskOnMessage(btn){
+function showTaskOnMessage(btn) {
 	const content = btn.getAttribute('data-message-content');
 	const textarea = document.getElementById('task_content');
 	textarea.value = content;
@@ -319,15 +319,32 @@ function showTaskOnMessage(btn){
 	createToatalContainer.style.display = 'block';
 }
 
-function showAlertDel(){
+function showAlertDel() {
 	const modal4 = document.getElementById('modal4');
 	overlay.style.display = 'block';
 	modal4.style.display = 'block';
 }
-function showAlertOut(){
+function showAlertOut() {
 	const modal5 = document.getElementById('modal5');
 	overlay.style.display = 'block';
 	modal5.style.display = 'block';
+}
+
+function showFileUpload() {
+	const fileArea = document.getElementById('chat_file');
+	fileArea.style.display = 'block';
+}
+
+function showHamPopup() {
+	const ham = document.getElementById('ham_popup');
+	ham.style.display = (ham.style.display == 'block') ? 'none' : 'block';
+}
+
+if (document.getElementById('event_prevent')) {
+	const link = document.getElementById('event_prevent')
+	link.addEventListener('click', (e) => {
+		e.preventDefault();
+	})
 }
 
 document.getElementById("chat_input").addEventListener("keydown", function(event) {

@@ -9,6 +9,7 @@ import com.jobcho.user.Users;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,15 +33,15 @@ public class Alarms {
 	@JoinColumn(name = "user_id")
 	private Users user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "notification_id")
 	private Notifications notification;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "task_id")
 	private Tasks task;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mention_id")
 	private Mentions mention;
 	
@@ -49,5 +50,8 @@ public class Alarms {
 	
 	@Column
 	private Integer workspaceId;
+	
+	@Column(name = "is_read", insertable = false)
+	private Integer isRead;
 	
 }
