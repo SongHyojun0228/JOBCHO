@@ -3,131 +3,185 @@
 <head>
 	<meta charset="utf-8" />
 	<script th:src="@{/javascript/calendar/index.global.js}" defer></script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var calendarEl = document.getElementById("calendar");
-
-			var calendar = new FullCalendar.Calendar(calendarEl, {
-				locale: "ko",
-				headerToolbar: {
-					left: "prev,next today",
-					center: "title",
-					right: "dayGridMonth,timeGridWeek,timeGridDay",
-				},
-				initialDate: new Date(),
-				navLinks: true,
-				selectable: true,
-				selectMirror: true,
-				dayHeaderContent: function (arg) {
-					const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
-					return weekdays[arg.date.getDay()];
-					arg.el.style.fontWeight = 500;
-				},
-				dayHeaderDidMount: function (arg) {
-					const day = arg.date.getDay();
-					if (day === 0) {
-						arg.el.style.color = "rgb(169,69,65)"; // 일요일 컬러 변경
-					} else if (day === 6) {
-						arg.el.style.color = "rgb(79, 130, 252)"; // 토요일 컬러 변경
-					}
-				},
-				dayCellDidMount: function (arg) {
-					const day = arg.date.getDay();
-					if (day === 0) {
-						arg.el.style.color = "rgb(169,69,65)"; // 일요일 컬러 변경
-					} else if (day === 6) {
-						arg.el.style.color = "rgb(79, 130, 252)"; // 토요일 컬러 변경
-					}
-				},
-
-				select: function (arg) {
-					var title = prompt("Event Title:");
-					if (title) {
-						calendar.addEvent({
-							title: title,
-							start: arg.start,
-							end: arg.end,
-							allDay: arg.allDay,
-						});
-					}
-					calendar.unselect();
-				},
-				eventClick: function (arg) {
-					if (confirm("Are you sure you want to delete this event?")) {
-						arg.event.remove();
-					}
-				},
-				editable: true,
-				dayMaxEvents: true, // allow "more" link when too many events
-				events: [
-					{
-						title: "All Day Event",
-						start: "2023-01-01",
-					},
-					{
-						title: "Long Event",
-						start: "2023-01-07",
-						end: "2023-01-10",
-					},
-					{
-						groupId: 999,
-						title: "Repeating Event",
-						start: "2023-01-09T16:00:00",
-					},
-					{
-						groupId: 999,
-						title: "Repeating Event",
-						start: "2023-01-16T16:00:00",
-					},
-					{
-						title: "Conference",
-						start: "2023-01-11",
-						end: "2023-01-13",
-					},
-					{
-						title: "Meeting",
-						start: "2023-01-12T10:30:00",
-						end: "2023-01-12T12:30:00",
-					},
-					{
-						title: "Lunch",
-						start: "2023-01-12T12:00:00",
-					},
-					{
-						title: "Meeting",
-						start: "2023-01-12T14:30:00",
-					},
-					{
-						title: "Happy Hour",
-						start: "2023-01-12T17:30:00",
-					},
-					{
-						title: "Dinner",
-						start: "2023-01-12T20:00:00",
-					},
-					{
-						title: "Birthday Party",
-						start: "2023-01-13T07:00:00",
-					},
-					{
-						title: "Click for Google",
-						url: "http://google.com/",
-						start: "2023-01-28",
-					},
-				],
-			});
-
-			calendar.render();
-		});
-	</script>
+	<script th:src="@{/javascript/calendar/calendar.js}" defer></script>
 	<link rel="stylesheet" th:href="@{/css/includes/shared.css}" />
-	<link rel="stylesheet" th:href="@{/css/calendar.css}" />
+	<link rel="stylesheet" th:href="@{/css/calendar/calendar.css}" />
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
 </head>
 
 <body>
-	<main layout:fragment="content">
-		<div id="calendar"></div>
-	</main>div id="calendar">
+	<div layout:fragment="content">
+		<div class="calendar-layout">
+			<div class="calendar-sidebar">
+				<div class="sidebar-content">
+					<button class="create-btn">
+						<img th:src="@{/images/icons/plus(2).png}" alt="+" class="icon" />
+						<span>일정 생성</span>
+					</button>
+
+					<span class="holiday-toggle" style="position: relative;">
+						<span class="icon-text">
+							<svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<path fill="currentColor"
+									d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z" />
+							</svg>
+							<span>국가 공휴일 및 기념일</span>
+						</span>
+						<!--
+						<img th:src="@{/images/icons/three_dots.png}" alt="menu" class="three-dots" />
+						<div th:replace="function/color_popup :: colorPopup"></div>
+						-->
+					</span>
+					<!-- 수정한 부분 -->
+					<span class="user-schedule" style="position: relative;" th:attr="data-username=${user.userName}">
+						<span class="icon-text">
+							<svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<path fill="currentColor"
+									d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z" />
+							</svg>
+							<span th:text="${user.userName}">사용자 이름</span>
+						</span>
+						<!--
+						<img th:src="@{/images/icons/three_dots.png}" alt="menu" class="three-dots" />
+						<div th:replace="function/color_popup :: colorPopup"></div>
+						-->
+					</span>
+
+					<th:block th:each="ws : ${workspaces}">
+						<span class="workspace-toggle" style="position: relative;"
+							th:data-workspace-id="${ws.workspaceId}" th:data-visible="${ws.visible}"
+							th:data-color="${ws.color}" th:classappend="${ws.visible == 'Y'} ? ' active' : ''">
+
+							<span class="icon-text">
+								<svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+									width="16" height="16" fill="currentColor">
+									<path
+										d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z" />
+								</svg>
+								<span th:text="${ws.workspaceName}">워크스페이스 이름</span>
+							</span>
+
+							<img th:src="@{/images/icons/three_dots.png}" alt="menu" class="three-dots" />
+
+							<div th:replace="~{function/color_popup :: colorPopup(${ws.color})}"></div>
+						</span>
+					</th:block>
+
+				</div>
+			</div>
+			<button id="sidebarToggle" class="sidebar-toggle-btn">접기</button>
+			<div class="calendar-main">
+				<div id="calendar"></div>
+			</div>
+		</div>
+		<div id="scheduleModal" class="modal" style="display: none;">
+			<div class="modal-content">
+				<h3>일정 생성</h3>
+
+				<label>제목
+					<input type="text" id="scheduleTitle" placeholder="제목을 입력하세요" />
+				</label>
+
+				<label>소속
+					<select id="scheduleGroup">
+						<option value="personal">정준영</option>
+						<option value="team3">3조 테스트</option>
+					</select>
+				</label>
+
+				<span>색상</span>
+				<div class="color-picker">
+					<span class="color-dot selected" style="background-color: #38bdf8;" data-color="#38bdf8"></span>
+					<span class="color-dot" style="background-color: #facc15;" data-color="#facc15"></span>
+					<span class="color-dot" style="background-color: #fb7185;" data-color="#fb7185"></span>
+					<span class="color-dot" style="background-color: #34d399;" data-color="#34d399"></span>
+					<span class="color-dot" style="background-color: #c084fc;" data-color="#c084fc"></span>
+					<span class="color-dot" style="background-color: #94a3b8;" data-color="#94a3b8"></span>
+				</div>
+
+				<label>시작일
+					<input type="datetime-local" id="scheduleStart" />
+				</label>
+
+				<label>종료일
+					<input type="datetime-local" id="scheduleEnd" />
+				</label>
+
+				<label>반복
+					<select id="scheduleRepeat">
+						<option value="none">반복 안 함</option>
+						<option value="daily">매일</option>
+						<option value="weekly">매주</option>
+						<option value="monthly">매월</option>
+						<option value="yearly">매년</option>
+					</select>
+				</label>
+
+				<label>설명
+					<textarea id="scheduleMemo" rows="3" placeholder="일정 설명을 입력하세요"></textarea>
+				</label>
+
+				<div class="modal-footer-fixed">
+					<button id="cancelScheduleBtn">취소</button>
+					<button id="addScheduleBtn">저장하기</button>
+				</div>
+			</div>
+		</div>
+		<div id="schedulePopup" class="modal" style="display: none;">
+			<div class="modal-content">
+				<div style="display: flex; justify-content: space-between; align-items: center;">
+					<h2 id="popupTitle">일정 제목</h2>
+					<div style="display: flex; gap: 8px;">
+						<button id="editBtn" title="수정">
+							<img th:src="@{/images/icons/edit.png}" alt="수정" style="width: 20px; height: 20px;">
+						</button>
+						<button id="deleteBtn" title="삭제">
+							<img th:src="@{/images/icons/trashbeen.png}" alt="삭제" style="width: 20px; height: 20px;">
+						</button>
+						<button id="closePopupBtn" title="닫기">
+							<img th:src="@{/images/icons/cross-mark.png}" alt="닫기" style="width: 20px; height: 20px;">
+						</button>
+					</div>
+				</div>
+
+				<div style="margin-top: 10px;">
+					<p id="popupTime">시작 ~ 종료</p>
+				</div>
+				<div class="popup-section">
+					<div style="margin-top: 10px;">
+						<p id="popupDescription">설명</p>
+					</div>
+				</div>
+				<div class="popup-section">
+					<div style="margin-top: 10px; display: flex; align-items: center;">
+						<img th:src="@{/images/icons/calendar.png}" alt="작성자"
+							style="width: 18px; height: 18px; margin-right: 6px;">
+						<span id="popupWriter">작성자</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="repeatDeleteModal" class="modal" style="display: none;">
+			<div class="modal-content">
+				<div style="display:flex;justify-content:space-between;align-items:center;">
+					<h2>반복 일정 삭제</h2>
+				</div>
+				<form id="repeatDeleteForm">
+					<div style="margin: 16px 0;">
+						<label><input type="radio" name="scope" value="single" checked /> 선택한 일정만</label>
+						<label><input type="radio" name="scope" value="future" /> 선택한 일정 및 향후 일정</label>
+						<label><input type="radio" name="scope" value="all" /> 모든 일정</label>
+					</div>
+					<div style="text-align:right; margin-top:24px;">
+						<button type="button" id="cancelRepeatDelete">취소</button>
+						<button type="submit" id="confirmRepeatDelete">확인</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
