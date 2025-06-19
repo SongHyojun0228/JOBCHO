@@ -12,7 +12,7 @@
 	<div class="main" layout:fragment="content">
 		<div class="invite_container">
 			<h1>팀 초대 메일 보내기</h1>
-			<form th:action="@{/21/invite}" method="post">
+			<form th:action="@{|/${workspaceId}/invite|}" method="post">
 				<input type="email" id="email" name="email" placeholder="이메일 입력" class="input_email" required>
 				<p class="caution email_caution">이메일 형식이 올바르지 않습니다.</p>
 

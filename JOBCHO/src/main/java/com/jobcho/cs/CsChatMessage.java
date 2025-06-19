@@ -10,6 +10,7 @@ import lombok.Setter;
 public class CsChatMessage {
 	private String sender;
 	private Integer senderId;
+	private String senderImg;
 	private String receiver;
 	private Integer receiverId;
 	private String content;

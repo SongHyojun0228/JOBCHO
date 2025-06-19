@@ -33,20 +33,22 @@ public class ChatroomMemberController {
 	private final UserService userService;
 	private final MailService mailService;
 
-    // 🌿 채팅방 멤버 초대하기 GET
-	@GetMapping("workspace/invite/chat/member")
-	public String getInviteChatMemeber(Principal principal, Model model) {
+	// 🌿 채팅방 멤버 초대하기 GET
+	@GetMapping("{workspaceId}/{chatroomId}/invite/chat/member")
+	public String getInviteChatMemeber(@PathVariable("workspaceId") Integer workspaceId, @PathVariable("chatroomId") Integer chatroomId,Principal principal, Model model) {
 		List<Users> members = this.memberService.findUsersByWorkspaceId(1);
 		model.addAttribute("members", members);
-
+		model.addAttribute(workspaceId);
+		model.addAttribute(chatroomId);
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Users user = _user.get();
 		model.addAttribute("user", user);
 		return "workspace/invite_chat_member";
 	}
-	
+
 	@GetMapping("/workspace/chatroom/invite/{chatroomId}/{token}")
-	public String acceptInvite(@PathVariable("token") String token, @PathVariable("chatroomId") String chatroomId, Principal principal) {
+	public String acceptInvite(@PathVariable("token") String token, @PathVariable("chatroomId") String chatroomId,
+			Principal principal) {
 		InviteToken inviteToken = inviteTokenRepository.findByToken(token)
 				.orElseThrow(() -> new IllegalArgumentException("잘못된 초대 링크입니다."));
 
@@ -58,7 +60,7 @@ public class ChatroomMemberController {
 
 		String inviteEmail = inviteToken.getInviteEmail();
 		String userEmail = principal.getName();
-		
+
 		System.out.println("초대된 이메일 : " + inviteEmail + ", 로그인한 유저 이메일 : " + userEmail);
 
 		if (!inviteEmail.equals(userEmail)) {
@@ -75,20 +77,19 @@ public class ChatroomMemberController {
 		return "redirect:/workspace/1/" + chatroomId;
 	}
 
-    // 🌿 채팅방 멤버 초대하기 POST
+	// 🌿 채팅방 멤버 초대하기 POST
 	@PostMapping("/{workspaceId}/{chatroomId}/invite")
 	public String inviteChatMembers(@PathVariable("workspaceId") Integer workspaceId,
-	                                @PathVariable("chatroomId") Integer chatroomId,
-	                                @RequestParam("inviteMembers") List<Integer> userIds) {
-	    String chatroomName = this.chatroomService.getChatroomNameById(chatroomId);
+			@PathVariable("chatroomId") Integer chatroomId, @RequestParam("inviteMembers") List<Integer> userIds) {
+		String chatroomName = this.chatroomService.getChatroomNameById(chatroomId);
 
-	    for (Integer userId : userIds) {
-	        String email = this.userService.getEmailById(userId); // 유저 ID로 이메일 가져오기
-	        mailService.sendChatroomInviteMail(email, chatroomId, chatroomName);
-	        System.out.println("채팅방 초대 메일 전송 완료 : " + email);
-	    }
+		for (Integer userId : userIds) {
+			String email = this.userService.getEmailById(userId); // 유저 ID로 이메일 가져오기
+			mailService.sendChatroomInviteMail(email, chatroomId, chatroomName);
+			System.out.println("채팅방 초대 메일 전송 완료 : " + email);
+		}
 
-	    return "redirect:/workspace/" + workspaceId + "/" + chatroomId;
+		return "redirect:/workspace/" + workspaceId + "/" + chatroomId;
 	}
 
 }

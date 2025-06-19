@@ -2,9 +2,12 @@ package com.jobcho.message;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.jobcho.user.UserRepository;
+import com.jobcho.user.Users;
 import com.jobcho.websocket.ChatMessage;
 
 import lombok.RequiredArgsConstructor;
@@ -14,16 +17,21 @@ import lombok.RequiredArgsConstructor;
 public class MessageService {
 
 	private final MessageRepository messageRepository;
+	private final UserRepository userRepository;
 
 	// 🌿 채팅방 메세지 생성 메서드
-	public void create(ChatMessage msg) {
+	public Integer create(ChatMessage msg) {
+		Optional<Users> _sender = this.userRepository.findById(msg.getSenderId());
+		Users sender = _sender.get();
+		
 		Messages m = new Messages();
 		m.setChatroomId(msg.getChatroomId());
-		m.setSenderId(msg.getSenderId());
+		m.setSender(sender);
 		m.setContent(msg.getContent());
 		m.setIsEdited(0);
 		m.setIsDeleted(0);
-		this.messageRepository.save(m);
+		messageRepository.save(m);
+		return m.getMessageId();
 	}
 
 	// 🌿 채팅방 메세지 불러오기 메서드
@@ -54,7 +62,7 @@ public class MessageService {
 		}
 	}
 
-	// 🌿 답글 객체 불러오기 메서드
+	// 🌿 답글 객체 불러오기 메서드(구형)
 	public Messages getMessageWithMessageId(int messageId) {
 		Optional<Messages> message = this.messageRepository.findById(messageId);
 		if (message.isPresent()) {
@@ -66,10 +74,13 @@ public class MessageService {
 
 	// 🌿 답글 작성 메서드
 	public void addReply(int chatroomId, int parentId, String content, int senderId) {
+		Optional<Users> _sender = this.userRepository.findById(senderId);
+		Users sender = _sender.get();
+		
 		Messages parent = messageRepository.findById(parentId).orElseThrow();
 		Messages reply = new Messages();
 		reply.setChatroomId(chatroomId);
-		reply.setSenderId(senderId);
+		reply.setSender(sender);
 		reply.setContent(content);
 		reply.setIsDeleted(0);
 		reply.setIsEdited(0);
@@ -77,9 +88,17 @@ public class MessageService {
 		messageRepository.save(reply);
 	}
 
-	// 🌿 답글 객체 불러오기 메서드
+	// 🌿 답글 객체 불러오기 메서드(신규, 이거만 쓸듯)
 	public List<Messages> getReplies(int parentMessageId) {
 		return messageRepository.findByParentMessage_MessageIdOrderByCreatedDateAsc(parentMessageId);
+	}
+	
+	public List<Messages> getTopLevelMessagesWithReplies(Integer chatroomId) {
+	    List<Messages> allMessages = messageRepository.findAllMessagesWithRepliesByChatroomId(chatroomId);
+
+	    return allMessages.stream()
+	        .filter(m -> m.getParentMessage() == null)
+	        .collect(Collectors.toList());
 	}
 
 }

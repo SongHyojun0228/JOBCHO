@@ -12,7 +12,7 @@
 <body>
 	<div class="main" layout:fragment="content">
 		<div class="invite_chat_new_total_container">
-			<form th:action="@{/1/1/invite}" method="post">
+			<form th:action="@{|/${workspaceId}/${chatroomId}/invite|}" method="post">
 				<input type="text" placeholder="멤버 검색" class="search_input" />
 				<hr />
 				<div class="search_result_container">

@@ -124,8 +124,8 @@ h3 {
 	margin-left: 0.4rem;
 	font-size: 1rem;
 	font-weight: 600;
-	color: rgb(248,230,232);
-	background-color: rgb(169,69,65);
+	color: rgb(248, 230, 232);
+	background-color: rgb(169, 69, 65);
 	border-radius: 6px;
 }
 
@@ -187,4 +187,29 @@ h3 {
 
 .team_creat_btn a:hover {
 	background-color: rgb(200, 200, 200);
+}
+
+.sender_info {
+	margin: 0;
+}
+
+.cs_text {
+	font-size: 1.1rem;
+	margin-top: 1rem;
+	font-weight: 600;
+	color: rgb(125, 125, 125);
+}
+
+.cs-chat-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 0.7rem;
+	height: 1.5rem;
+	margin-left: 0.4rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: rgb(248, 230, 232);
+	background-color: rgb(169, 69, 65);
+	border-radius: 6px;
 }

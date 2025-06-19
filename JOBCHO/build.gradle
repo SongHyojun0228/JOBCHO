@@ -58,8 +58,9 @@ dependencies {
 	// 이메일 인증
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	
-	//공휴일용
-	implementation 'org.json:json:20230227'
+	// LocalDate --> 직렬화
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	
 }
 
 tasks.named('test') {
