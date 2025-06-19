@@ -351,7 +351,7 @@
 										<span class="chat_sender" th:text="${message.sender.userName}">아이디</span>
 									</div>
 									<div class="chat_bubble" th:if="${message.isDeleted == 0}"
-										th:text="${message.isEdited == 1} ? ${message.content + ' (수정됨)'} : ${message.content}"
+										th:utext="${message.highlightedContent}"
 										th:attr="data-message-id=${message.messageId}">
 										기존 챗 내용
 									</div>
@@ -707,9 +707,9 @@
 		<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
-		<script th:inline="javascript">
+		<!--<script th:inline="javascript">
 			const messages = /*[[${messagesJson}]]*/[];
-		</script> 
+		</script>-->
 
 
 		<script>
@@ -721,7 +721,7 @@
 			const userId = document.body.dataset.userId;
 			const userImg = document.body.dataset.userImg;
 
-			document.addEventListener('DOMContentLoaded', function () {
+			/*document.addEventListener('DOMContentLoaded', function () {
 
 				console.log(messages);
 				console.log(typeof (messages));
@@ -730,14 +730,34 @@
 					showMessage(msg);
 				});
 
-			}); 
+			});*/
 
 			let mentionList;
 			document.addEventListener('DOMContentLoaded', async function () {
+				/*const parsedMessages = JSON.parse(messages);
+				parsedMessages.forEach(msg => {
+					showMessage(msg);
+				});*/
+
 				const chatroomId = Number(document.querySelector('.chat_main').dataset.chatroomId);
 
 				const res = await fetch(`/chatroom/${chatroomId}/members`);
 				chatroomMembers = await res.json();
+
+				/*try {
+					const msgRes = await fetch(`/workspace/${chatroomId}/messages`);
+					const messages = await msgRes.json();
+					messages.forEach(msg => showMessage(msg));
+				} catch (error) {
+					console.error("메시지 불러오기 실패", error);
+				}
+
+				try {
+					const memberRes = await fetch(`/chatroom/${chatroomId}/members`);
+					chatroomMembers = await memberRes.json();
+				} catch (error) {
+					console.error("채팅방 멤버 불러오기 실패", error);
+				}*/
 
 				const socket = new SockJS('/ws');
 				stompClient = Stomp.over(socket);
@@ -754,6 +774,8 @@
 							uploadFileWithMessageId(msg.messageId);
 						}
 						showMessage(msg); // 이건 객체로 넘기는거
+						console.log(msg);
+
 					});
 				});
 
@@ -774,7 +796,6 @@
 							m.userName.toLowerCase().includes(keyword) &&
 							m.userId !== Number('[[${user.userId}]]')
 						);
-						console.log("'[[${user.userId}]]' : " + '[[${user.userId}]]');
 						console.log('필터된 멤버 : ', matched);
 						showMentionDropdown(matched, match.index + 1, cursorPos);
 					} else {
@@ -849,10 +870,6 @@
 				infoDiv.appendChild(profileImg);
 				infoDiv.appendChild(senderSpan);
 
-				/*const contentDiv = document.createElement("div");
-				contentDiv.className = "chat_bubble";
-				contentDiv.setAttribute("data-message-id", message.messageId);*/
-
 				let contentDiv;
 				if (message.isDeleted) {
 					contentDiv = document.createElement("div");
@@ -867,7 +884,14 @@
 						contentText += " (수정됨)";
 					}
 
-					contentDiv.innerHTML = highlightMentions(contentText, message.mentions || []);
+					// contentDiv.innerHTML = highlightMentions(contentText, message.mentions || []);
+					const cleanMentions = message.mentions.map(m => m.startsWith('@') ? m.slice(1) : m);
+
+					console.log("contentText:", contentText);
+					console.log("cleanMentions:", cleanMentions);
+					console.log("highlighted:", highlightMentions(contentText, cleanMentions));
+
+					contentDiv.innerHTML = highlightMentions(contentText, cleanMentions || []);
 				}
 
 				const chatWrap = document.createElement("div");
@@ -970,7 +994,6 @@
 				}
 
 				chatWrap.appendChild(chatMenu);
-
 				messageContainer.appendChild(infoDiv);
 				messageContainer.appendChild(contentDiv);
 
@@ -1016,12 +1039,13 @@
 
 
 			function extractMentions(text) {
-				const mentionRegex = /@([^\s@]+)/g;
+				const mentionRegex = /(@[^\s@]+)/g;
 				const matches = [];
 				let match;
 				while ((match = mentionRegex.exec(text)) !== null) {
 					matches.push(match[1]);
 				}
+				console.log("extractMentions : " + matches);
 				return matches;
 			}
 

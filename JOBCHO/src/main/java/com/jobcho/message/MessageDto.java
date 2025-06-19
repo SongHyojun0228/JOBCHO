@@ -16,6 +16,9 @@ public class MessageDto {
     private LocalDateTime createdDate;
     private Integer isEdited;
     private Integer isDeleted;
+    private String senderName;
+    private String senderImg;
+    private String fileName;
 
     private List<String> mentions; 
 }

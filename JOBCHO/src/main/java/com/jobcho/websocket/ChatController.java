@@ -60,8 +60,10 @@ public class ChatController {
 		// 멘션이 포함된 메세지일 때
 		if (message.getMentions() != null) {
 			for (String mentionUserName : message.getMentions()) {
-				System.out.println(">>> mention user: " + mentionUserName);
-				Integer receiverId = userService.findUserIdByUserName(mentionUserName);
+				String mentionName = mentionUserName.startsWith("@") ? mentionUserName.substring(1) : mentionUserName;
+				Integer receiverId = userService.findUserIdByUserName(mentionName);
+//				System.out.println(">>> mention user: " + mentionUserName);
+//				Integer receiverId = userService.findUserIdByUserName(mentionUserName);
 
 				// 멘션한 사용자가 있을 때
 				if (receiverId != null) {
@@ -77,7 +79,8 @@ public class ChatController {
 
 					mentionService.saveMention(mentionDto);
 					System.out.println("<<< mention save2 >>>");
-					validMentions.add(mentionUserName);
+//					validMentions.add(mentionUserName);
+					validMentions.add("@" + mentionName);
 				}
 			}
 		}
@@ -85,7 +88,7 @@ public class ChatController {
 		message.setMentions(validMentions);
 
 		MessageResponse response = new MessageResponse(messageId, message.getSender(), message.getContent(),
-														message.getChatroomId(), validMentions, message.getFileName());
+				message.getChatroomId(), validMentions, message.getFileName());
 
 		messagingTemplate.convertAndSend("/topic/chatroom/" + message.getChatroomId(), response);
 	}

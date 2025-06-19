@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.jobcho.file.Files;
+import com.jobcho.mention.Mentions;
 import com.jobcho.user.Users;
 
 import jakarta.persistence.CascadeType;
@@ -20,6 +21,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Transient;
+import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +31,7 @@ import lombok.Setter;
 @Entity
 @DynamicInsert
 public class Messages {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_message")
 	@SequenceGenerator(name = "seq_message", sequenceName = "SEQ_MESSAGE", allocationSize = 1)
@@ -61,5 +65,26 @@ public class Messages {
 
 	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Files> files = new ArrayList<>();
+
+	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Mentions> mentions = new ArrayList<>();
+
+	@Transient
+	private String highlightedContent;
+
+	public void generateHighlightedContent() {
+		String result = this.content;
+		if (this.mentions != null) {
+			for (Mentions mention : this.mentions) {
+				String mentionName = mention.getReceiver().getUserName();
+				result = result.replaceAll(Pattern.quote("@" + mentionName),
+						"<span class='mention'>@" + mentionName + "</span>");
+				System.out.println(">>> result : " + result);
+			}
+		}
+		this.highlightedContent = result;
+		System.out.println("<<< 하이라이트 처리 : Messages.generateHighlightedContent()");
+		System.out.println(">>> highlightedContent : " + highlightedContent);
+	}
 
 }

@@ -23,7 +23,7 @@ public class MessageService {
 	public Integer create(ChatMessage msg) {
 		Optional<Users> _sender = this.userRepository.findById(msg.getSenderId());
 		Users sender = _sender.get();
-		
+
 		Messages m = new Messages();
 		m.setChatroomId(msg.getChatroomId());
 		m.setSender(sender);
@@ -76,7 +76,7 @@ public class MessageService {
 	public void addReply(int chatroomId, int parentId, String content, int senderId) {
 		Optional<Users> _sender = this.userRepository.findById(senderId);
 		Users sender = _sender.get();
-		
+
 		Messages parent = messageRepository.findById(parentId).orElseThrow();
 		Messages reply = new Messages();
 		reply.setChatroomId(chatroomId);
@@ -92,13 +92,17 @@ public class MessageService {
 	public List<Messages> getReplies(int parentMessageId) {
 		return messageRepository.findByParentMessage_MessageIdOrderByCreatedDateAsc(parentMessageId);
 	}
-	
-	public List<Messages> getTopLevelMessagesWithReplies(Integer chatroomId) {
-	    List<Messages> allMessages = messageRepository.findAllMessagesWithRepliesByChatroomId(chatroomId);
 
-	    return allMessages.stream()
-	        .filter(m -> m.getParentMessage() == null)
-	        .collect(Collectors.toList());
+	public List<Messages> getTopLevelMessagesWithReplies(Integer chatroomId) {
+		List<Messages> allMessages = messageRepository.findAllMessagesWithRepliesByChatroomId(chatroomId);
+
+		allMessages.forEach(m -> m.generateHighlightedContent());
+		System.out.println("<<< 하이라이트 처리 : MessageService.getTopLevelMessagesWithReplies()");
+		for (int i = 0; i < allMessages.size(); i++) {
+			System.out.println("allMessage[" + i + "] : " + allMessages.get(i).getContent());
+		}
+
+		return allMessages.stream().filter(m -> m.getParentMessage() == null).collect(Collectors.toList());
 	}
 
 }

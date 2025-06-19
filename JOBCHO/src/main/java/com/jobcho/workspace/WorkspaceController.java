@@ -194,28 +194,6 @@ public class WorkspaceController {
 		Set<Integer> bookmarkedMessageIds = bookmarkService.extractMessageBookmarkIds(bookmarks);
 		List<Mentions> mentions = mentionService.getByChatroomId(chatroomId);
 
-		Map<Integer, List<Mentions>> mentionsMap = mentions.stream()
-				.collect(Collectors.groupingBy(m -> m.getMessage().getMessageId()));
-
-		List<MessageDto> messageDtos = messages.stream().map(msg -> {
-			MessageDto dto = new MessageDto();
-			dto.setMessageId(msg.getMessageId());
-			dto.setChatroomId(msg.getChatroomId());
-			dto.setSenderId(msg.getSender().getUserId());
-			dto.setContent(msg.getContent());
-			dto.setCreatedDate(msg.getCreatedDate());
-			dto.setIsEdited(msg.getIsEdited());
-			dto.setIsDeleted(msg.getIsDeleted());
-
-			// 멘션된 유저 이름만 추출
-			List<String> mentionNames = mentionsMap.getOrDefault(msg.getMessageId(), List.of()).stream()
-					.map(m -> m.getReceiver().getUserName()).toList();
-
-			dto.setMentions(mentionNames);
-
-			return dto;
-		}).toList();
-
 		model.addAttribute("user", user);
 		model.addAttribute("members", members);
 		model.addAttribute("chatroomMembers", chatroomMembers);
@@ -233,15 +211,6 @@ public class WorkspaceController {
 		model.addAttribute("alarms", alarms);
 		model.addAttribute("mychat", mychat);
 		model.addAttribute("mentions", mentions);
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-			String messagesJson = mapper.writeValueAsString(messageDtos);
-			model.addAttribute("messagesJson", messagesJson);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 
 		return "workspace/workspace";
 	}
