@@ -95,22 +95,18 @@ document.addEventListener("DOMContentLoaded", function() {
 		dayMaxEvents: true,
 		eventDisplay: "block",
 
-		//여기부터
 		events: function(fetchInfo, successCallback, failureCallback) {
 			console.log("events 콜백 진입", fetchInfo.startStr, fetchInfo.endStr);
 
-			// 1) 파라미터 준비
 			const activeElems = document.querySelectorAll('.workspace-toggle.active');
 			const params = new URLSearchParams();
 			activeElems.forEach(el => params.append('workspaceIds', el.dataset.workspaceId));
 			params.append('start', fetchInfo.startStr);
 			params.append('end', fetchInfo.endStr);
 
-			// 2) API 호출
 			fetch(`/function/calendar/events?${params.toString()}`)
 				.then(res => res.json())
 				.then(data => {
-					// delete-after 처리를 위한 배열 초기화
 					userEvents.length = 0;
 
 					const baseEvents = [];
@@ -122,7 +118,6 @@ document.addEventListener("DOMContentLoaded", function() {
 						const desc = item.description;
 						const wr = item.writer;
 
-						// 단일 삭제일자
 						const exceptions = (item.exceptionDates || []).map(d => {
 							const dt = new Date(d);
 							const y = dt.getFullYear();
@@ -130,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function() {
 							const da = String(dt.getDate()).padStart(2, '0');
 							return `${y}-${m}-${da}`;
 						});
-						// delete-after 기준일
 						const repeatEnd = item.repeatEnd ? (() => {
 							const dt = new Date(item.repeatEnd);
 							const y = dt.getFullYear();
@@ -139,7 +133,6 @@ document.addEventListener("DOMContentLoaded", function() {
 							return `${y}-${m}-${da}`;
 						})() : null;
 
-						// --- 1) 기본 인스턴스: 예외일 아니면 추가
 						const startDay = item.startDate.split('T')[0];
 						if (!exceptions.includes(startDay)) {
 							baseEvents.push({
@@ -159,9 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
 							});
 						}
 
-						// --- 2) 반복 인스턴스 생성
 						if (rep) {
-							// delete-after 로직에서 사용
 							userEvents.push({
 								id: item.id,
 								originalStart: new Date(item.startDate),
@@ -176,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 							const startTs = new Date(item.startDate).getTime();
 							const endTs = new Date(item.endDate).getTime();
-							// 원본 제외
 							const dates = generateDatesBetween(startTs, Date.parse(fetchInfo.endStr), rep).slice(1);
 
 							dates.forEach(iso => {
@@ -205,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function() {
 						}
 					});
 
-					// 3) 화면에 뿌릴 최종 배열 합치기
 					successCallback(baseEvents.concat(repeatEvents));
 				})
 				.catch(err => {
@@ -260,21 +249,18 @@ document.addEventListener("DOMContentLoaded", function() {
 						});
 					});
 
-					// 1) 공휴일 토글
 					const holidayBtn = document.querySelector('.holiday-toggle');
 					if (holidayBtn && holidayBtn.classList.contains('icon-off')) {
 						document.querySelectorAll('.fc-event.group-holiday')
 							.forEach(el => el.style.display = 'none');
 					}
 
-					// 2) 내 일정 토글
 					const userBtn = document.querySelector('.user-schedule');
 					if (userBtn && userBtn.classList.contains('icon-off')) {
 						document.querySelectorAll('.fc-event.group-user')
 							.forEach(el => el.style.display = 'none');
 					}
 
-					// 3) 워크스페이스 토글 (active 클래스가 없으면 숨김)
 					document.querySelectorAll('.workspace-toggle[data-workspace-id]').forEach(btn => {
 						const wsId = btn.dataset.workspaceId;
 						const selector = `.fc-event.workspace-${wsId}`;
@@ -283,7 +269,6 @@ document.addEventListener("DOMContentLoaded", function() {
 								.forEach(el => el.style.display = 'none');
 						}
 					});
-					//수정
 					/*
 					calendar.getEvents().forEach(event => {
 						if (event.classNames.includes("generated-repeat")) {
@@ -339,9 +324,6 @@ document.addEventListener("DOMContentLoaded", function() {
 				.catch(err => console.error("공휴일 불러오기 실패:", err));
 
 		},
-
-		//여기부터?
-
 
 		dayHeaderContent: function(arg) {
 			const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
@@ -799,10 +781,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			repeatEnd: null,
 			exceptions: []
 		};
-
-		//수정됨
-		//const created = calendar.addEvent(newEvent);
-		//userEvents.push(newEvent);
 
 		fetch('/function/calendar/events', {
 			method: 'POST',
