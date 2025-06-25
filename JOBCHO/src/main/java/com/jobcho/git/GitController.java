@@ -28,6 +28,7 @@ public class GitController {
 	private final UserService userService;
 	private final WorkspaceService workspaceService;
 	private final GitFileService gitFileService;
+	private final CommitService commitService;
 
 	@Value("${file.git-upload-dir}")
 	private String uploadGitFileDir;
@@ -38,7 +39,7 @@ public class GitController {
 		Optional<Users> _user = this.userService.getUser(principal.getName());
 		Workspaces workspace = this.workspaceService.getWorkspaceByWorkspaceId(workspaceId);
 		List<GitFile> allGitFiles = this.gitFileService.getAllGitFiles();
-		
+
 		model.addAttribute("user", _user.get());
 		model.addAttribute("workspace", workspace);
 		model.addAttribute("allGitFiles", allGitFiles);
@@ -48,7 +49,9 @@ public class GitController {
 
 	@PostMapping("/workspace/{workspaceId}/upload/git")
 	public String uploadGit(@PathVariable("workspaceId") Integer workspaceId,
-			@RequestParam("git_files") MultipartFile[] gitFiles, Model model, Principal principal) {
+			@RequestParam("git_files") MultipartFile[] gitFiles, @RequestParam("commit_content") String commitContent,
+			Model model, Principal principal) {
+		
 
 		File uploadGitFile = new File(uploadGitFileDir).getAbsoluteFile();
 		if (!uploadGitFile.exists())
@@ -60,7 +63,8 @@ public class GitController {
 
 			try {
 				file.transferTo(dest);
-				this.gitFileService.uploadGitFiles(null, null, gitFileName);
+				Commit commit = this.commitService.uploadCommit(null, commitContent);
+				this.gitFileService.uploadGitFiles(null, commit, gitFileName);
 			} catch (Exception e) {
 				System.out.println("gitFile 업로드 중 실패");
 				e.printStackTrace();

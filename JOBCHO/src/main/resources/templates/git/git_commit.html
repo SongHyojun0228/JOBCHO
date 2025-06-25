@@ -40,14 +40,15 @@
 									<td>
 										<div>
 											<img th:src="@{/images/icons/git_file.png}">
-											<a th:href="@{|/uploads/git/${gitFile.fileName}|}" download th:text="${gitFile.fileName}"></a>
+											<a th:href="@{|/uploads/git/${gitFile.fileName}|}" download
+												th:text="${gitFile.fileName}"></a>
 										</div>
 									</td>
 									<td>
-										<p>Commit Content</p>
+										<p th:text="${gitFile.commit.content}">Commit Content</p>
 									</td>
 									<td>
-										<p>Commited Date</p>
+										<p th:text="${gitFile.commit.uploaedDate}">Commited Date</p>
 									</td>
 								</tr>
 							</table>
@@ -74,7 +75,10 @@
 								th:src="@{/uploads/profileImg/{img}(img=${user.userImg})}" alt="로그인한 유저 프로필">
 							<div id="write_commit_details_container">
 								<p>Commit changes</p>
-								<textarea type="text" placeholder="Add an optional extended description..."></textarea>
+								<textarea type="text" placeholder="Add an optional extended description..."
+									name="commit_content"
+									id="commit_content"
+									required></textarea>
 								<div class="commit_radio_input">
 									<input type="radio" name="commit_branch">
 									<label>Commit directly to the main branch</label>

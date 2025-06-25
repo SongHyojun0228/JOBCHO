@@ -32,7 +32,7 @@
 		</head>
 
 		<body th:data-user-name="${user.userName}" th:data-user-id="${user.userId}"
-			th:data-user-img="@{/uploads/profileImg/{img}(img=${user.userImg})}">
+			th:data-user-img="@{/uploads/profileImg/{img}(img=${user.userImg})}" th:data-chatroom-id="${chatroomId}">
 			<div id="modalBackdrop" class="modal_backdrop" style="display: none;"></div>
 			<header>
 				<a th:href="@{/index}">
@@ -1314,6 +1314,7 @@
 				}
 
 				function sendNotificationMessage(userName, userId, userImg, chatroomId) {
+					console.log("공지 등록했습니다");
 					const msg = {
 						sender: userName,
 						content: `${userName}님이 공지를 등록했습니다.`,

@@ -1,5 +1,7 @@
 package com.jobcho.git;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,5 +29,8 @@ public class Commit {
 	
 	@Column
 	private String content;
+	
+	@Column(name = "uploaded_date", insertable = false)
+	private LocalDateTime uploaedDate;
 	
 }
