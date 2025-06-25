@@ -1,0 +1,43 @@
+.popup_format {
+	display: flex;
+	flex-direction: row;
+	padding-bottom: 0.3rem;
+	align-items: center;
+}
+
+.popup_format img {
+	width: 1rem;
+	height: 1rem;
+	margin-left: 0rem;
+	margin-right: 0.3rem;
+	padding: 1px;
+}
+
+#plus_icon:hover {
+	background-color: rgb(228, 228, 228);
+	border-radius: 5px;
+}
+
+.menu_icon_plus {
+	display: flex;
+	flex-direction: column;
+}
+
+.popup_format:hover {
+	background-color: rgb(228, 228, 228);
+	border-radius: 5px;
+}
+
+.ham_popup {
+	display: none;
+	position: absolute;
+	top: 100%;
+	right: 30%;
+	margin-top: 5px;
+	width: 12rem;
+	padding: 10px;
+	background-color: rgb(250, 250, 250);
+	border: 1px solid rgb(228, 228, 228);
+	z-index: 2;
+	border-radius: 10px;
+}

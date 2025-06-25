@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{includes/layout}" lang="ko">
+
+<head>
+	<title layout:title="커밋페이지">커밋페이지</title>
+	<link rel="stylesheet" th:href="@{/css/git/git_commit.css}">
+</head>
+
+<body>
+	<div class="main" layout:fragment="content">
+		<div id="total_git_commit_controller">
+			<div id="left_branches_container">
+				<p th:text="${workspace.workspaceName}">팀명 == 프로젝트명으로 해도 될 듯???</p>
+				<div> <!-- 브랜치 나열 -->
+					<p>- 브랜치1</p>
+					<p>- 브랜치2</p>
+				</div>
+			</div>
+
+			<div id="right_total_container">
+				<div id="file_upload_history_container">
+					<div id="upper_container">
+						<div id="last_container_container">
+							<div id="commit_user_info">
+								<img class="mine_chat_sender_profile"
+									th:src="@{/uploads/profileImg/{img}(img=${user.userImg})}" alt="마지막으로 커밋한 유저 프로필">
+								<p id="last_commit_user">마지막 커밋한 유저명</p>
+								<p id="last_commit_content">마지막 커밋내용</p>
+							</div>
+							<div id="commit_details_info">
+								<p id="last_commit_date">마지막 커밋 이후로 지난 날짜</p>
+								<p>12 Commits</p>
+							</div>
+						</div>
+
+						<div th:if="${allGitFiles.size() != 0}" id="uploaded_files_container">
+							<table>
+								<tr th:each="gitFile : ${allGitFiles}">
+									<td>
+										<div>
+											<img th:src="@{/images/icons/git_file.png}">
+											<a th:href="@{|/uploads/git/${gitFile.fileName}|}" download th:text="${gitFile.fileName}"></a>
+										</div>
+									</td>
+									<td>
+										<p>Commit Content</p>
+									</td>
+									<td>
+										<p>Commited Date</p>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<form id="files_container" th:action="@{|/workspace/${workspace.workspaceId}/upload/git|}" method="post"
+					enctype="multipart/form-data">
+					<div id="under_container">
+						<div id="upload_file_container">
+							<div class="file_input">
+								<label>파일 업로드</label>
+								<input type="file" id="git_files" name="git_files" multiple>
+							</div>
+							<div class="file_input">
+								<label>폴더 업로드</label>
+								<input type="file" webkitdirectory>
+							</div>
+						</div>
+
+						<div id="write_commit_container">
+							<img class="mine_chat_sender_profile"
+								th:src="@{/uploads/profileImg/{img}(img=${user.userImg})}" alt="로그인한 유저 프로필">
+							<div id="write_commit_details_container">
+								<p>Commit changes</p>
+								<textarea type="text" placeholder="Add an optional extended description..."></textarea>
+								<div class="commit_radio_input">
+									<input type="radio" name="commit_branch">
+									<label>Commit directly to the main branch</label>
+								</div>
+								<div class="commit_radio_input">
+									<input type="radio" name="commit_branch">
+									<label>Create a new branch for this commit start a pull request</label>
+								</div>
+								<div id="commit_btns">
+									<button id="commit_btn">Commit</button>
+									<button id="cancel_btn" type="reset">Cancel</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
